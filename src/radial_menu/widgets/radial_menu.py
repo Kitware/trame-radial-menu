@@ -1,4 +1,8 @@
+from contextlib import contextmanager
+
 from trame_client.widgets.core import AbstractElement
+
+from trame.widgets import vuetify3 as v3
 
 from .. import module
 
@@ -11,22 +15,50 @@ class HtmlElement(AbstractElement):
 
 
 __all__ = [
-    "CustomWidget",
+    "RadItem",
+    "RadMenu",
+    "RadWheel",
 ]
 
 
-# Expose your vue component(s)
-class CustomWidget(HtmlElement):
+class RadMenu(HtmlElement):
     def __init__(self, **kwargs):
         super().__init__(
-            "your-custom-widget",
+            "rad-menu",
+            **kwargs,
+        )
+
+    @contextmanager
+    def sideMenu(self):
+        v3.Template.slot_names.update(["side-menu"])
+        with v3.Template(v_slot_side_menu=""):
+            yield
+
+
+class RadWheel(HtmlElement):
+    def __init__(self, **kwargs):
+        super().__init__(
+            "rad-wheel",
             **kwargs,
         )
         self._attr_names += [
-            "attribute_name",
-            ("py_attr_name", "js_attr_name"),
+            "innerRadius",
+            "outerRadius",
+            "beginAngle",
+            "endAngle",
+            "color",
         ]
-        self._event_names += [
-            "click",
-            "change",
+
+
+class RadItem(HtmlElement):
+    def __init__(self, **kwargs):
+        super().__init__(
+            "rad-item",
+            **kwargs,
+        )
+        self._attr_names += [
+            "label",
+            "icon",
+            "size",
+            "closeOnClick",
         ]

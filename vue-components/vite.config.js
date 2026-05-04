@@ -1,5 +1,13 @@
+import vue from "@vitejs/plugin-vue";
+
 export default {
+  plugins: [vue()],
   base: "./",
+  resolve: {
+    alias: {
+      "@": "./src",
+    },
+  },
   build: {
     lib: {
       entry: "./src/main.js",

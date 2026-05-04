@@ -6,3 +6,16 @@
   margin: 0 10px;
   background: #ce93d8 !important;
 }
+.centerAbs[data-v-db24fb9d] {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+.sideDiv[data-v-db24fb9d] {
+  position: absolute;
+  background-color: #d3d3d3;
+}
+svg[data-v-e2d8cdde] {
+  pointer-events: none;
+  position: absolute;
+  transform: "translate(-50%, -50%)";
+}
