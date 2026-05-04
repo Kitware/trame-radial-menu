@@ -1,14 +1,14 @@
 {
-  "name": "vue-radial_menu",
+  "name": "vue-trame_radial_menu",
   "private": true,
   "version": "0.0.0",
-  "main": "./dist/radial_menu.umd.js",
-  "unpkg": "./dist/radial_menu.umd.js",
-  "module": "./dist/radial_menu.mjs",
+  "main": "./dist/trame_radial_menu.umd.js",
+  "unpkg": "./dist/trame_radial_menu.umd.js",
+  "module": "./dist/trame_radial_menu.mjs",
   "exports": {
     ".": {
-      "import": "./dist/radial_menu.mjs",
-      "require": "./dist/radial_menu.umd.js"
+      "import": "./dist/trame_radial_menu.mjs",
+      "require": "./dist/trame_radial_menu.umd.js"
     }
   },
   "scripts": {

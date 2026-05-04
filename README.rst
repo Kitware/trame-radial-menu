@@ -11,7 +11,7 @@ Install the application/library
 
 .. code-block:: console
 
-    pip install radial-menu
+    pip install trame-radial-menu
 
 
 Development setup

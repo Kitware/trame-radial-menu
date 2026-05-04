@@ -11,9 +11,9 @@ export default {
   build: {
     lib: {
       entry: "./src/main.js",
-      name: "radial_menu",
+      name: "trame_radial_menu",
       formats: ["umd"],
-      fileName: "radial_menu",
+      fileName: "trame_radial_menu",
     },
     rollupOptions: {
       external: ["vue"],
@@ -23,7 +23,7 @@ export default {
         },
       },
     },
-    outDir: "../src/radial_menu/module/serve",
+    outDir: "../src/trame_radial_menu/module/serve",
     assetsDir: ".",
   },
 };

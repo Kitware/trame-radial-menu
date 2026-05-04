@@ -1,12 +1,13 @@
 [project]
-name = "radial-menu"
-version = "1.0.0"
+name = "trame-radial-menu"
+version = "1.0.1"
 description = "A trame component that make a radial menu around the mouse cursor"
 authors = [
     {name = "Kitware"},
 ]
 dependencies = [
     "trame_client>=3.10",
+    "trame-vuetify",
 ]
 requires-python = ">=3.9"
 readme = "README.rst"
@@ -46,15 +47,15 @@ build-backend = "hatchling.build"
 [tool.hatch.build]
 include = [
   "/src/trame/**/*.py",
-  "/src/radial_menu/**/*.py",
-  "/src/radial_menu/**/*.js",
-  "/src/radial_menu/**/*.css",
+  "/src/trame_radial_menu/**/*.py",
+  "/src/trame_radial_menu/**/*.js",
+  "/src/trame_radial_menu/**/*.css",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = [
     "src/trame",
-    "src/radial_menu",
+    "src/trame_radial_menu",
 ]
 
 [tool.ruff]
@@ -99,7 +100,7 @@ version_toml = [
     "pyproject.toml:project.version",
 ]
 version_variables = [
-    "src/radial_menu/__init__.py:__version__",
+    "src/trame_radial_menu/__init__.py:__version__",
 ]
 
 build_command = """

@@ -183,7 +183,6 @@ onUnmounted(() => {
 
 .sideDiv {
     position: absolute;
-    background-color: lightgray;
 }
 
 </style>

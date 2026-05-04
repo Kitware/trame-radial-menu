@@ -1,20 +1,25 @@
 from pathlib import Path
 
+from trame_client.utils.version import get_version
+
+__version__ = get_version("trame-radial-menu")
+
 # Compute local path to serve
 serve_path = str(Path(__file__).with_name("serve").resolve())
+serve_directory = f"__trame_radial_menu_{__version__}"
 
 # Serve directory for JS/CSS files
-serve = {"__radial_menu": serve_path}
+serve = {serve_directory: serve_path}
 
 # List of JS files to load (usually from the serve path above)
-scripts = ["__radial_menu/radial_menu.umd.js"]
+scripts = [serve_directory + "/trame_radial_menu.umd.js"]
 
 # List of CSS files to load (usually from the serve path above)
 if (Path(serve_path) / "style.css").exists():
-    styles = ["__radial_menu/style.css"]
+    styles = [serve_directory + "/style.css"]
 
 # List of Vue plugins to install/load
-vue_use = ["radial_menu"]
+vue_use = ["trame_radial_menu"]
 
 # Uncomment to add entries to the shared state
 # state = {}

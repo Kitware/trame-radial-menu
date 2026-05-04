@@ -176,21 +176,20 @@ class TrameSlicerRadialMenu(RadMenu):
                         width="300px",
                     ),
                     v3.VContainer(fluid=True),
+                    v3.VRow(),
                 ):
-                    html.Div("Brush size")
-                    with v3.VRow():
-                        v3.VSlider(
-                            v_model=("brush_diameter_slider", 20),
-                            min=0,
-                            max=100,
-                            hide_details=True,
-                        )
-                        v3.VBtn(
-                            icon="mdi-sphere",
-                            variant="text",
-                            click="use_sphere_brush = !use_sphere_brush",
-                            color=("use_sphere_brush ? 'primary' : 'default'", ""),
-                        )
+                    v3.VSlider(
+                        v_model=("brush_diameter_slider", 20),
+                        min=0,
+                        max=100,
+                        hide_details=True,
+                    )
+                    v3.VBtn(
+                        icon="mdi-sphere",
+                        variant="text",
+                        click="use_sphere_brush = !use_sphere_brush",
+                        color=("use_sphere_brush ? 'primary' : 'default'", ""),
+                    )
 
                 # Scissors panel
                 with v3.VCard(
@@ -198,20 +197,19 @@ class TrameSlicerRadialMenu(RadMenu):
                     width="300px",
                 ):
                     with (
-                        v3.VRow(classes="mt-1"),
+                        v3.VRow(),
                         v3.VRadioGroup(
                             v_model=("brush_interaction_mode", "continuous"),
                             label="Brush interaction mode",
-                            inline=True,
-                            hide_details=True,
+                            classes="pt-8",
                         ),
                     ):
                         for mode in self.brush_interaction_modes:
                             v3.VRadio(label=mode["label"], value=mode["value"])
 
-                    with v3.VRow(classes="mt-5"):
+                    with v3.VRow():
                         with (
-                            v3.VCol(classes="pa-0"),
+                            v3.VCol(),
                             v3.VRadioGroup(
                                 v_model=("fill_mode", "erase_inside"),
                                 label="Operation",
@@ -222,7 +220,7 @@ class TrameSlicerRadialMenu(RadMenu):
                                 v3.VRadio(label=mode["label"], value=mode["value"])
 
                         with (
-                            v3.VCol(classes="pa-0"),
+                            v3.VCol(),
                             v3.VRadioGroup(
                                 v_model=("range_mode", "unlimited"),
                                 label="Cut mode",
@@ -232,7 +230,7 @@ class TrameSlicerRadialMenu(RadMenu):
                             for mode in self.range_modes:
                                 v3.VRadio(label=mode["label"], value=mode["value"])
 
-                    with v3.VRow(classes="mt-5 mx-1 mb-0"):
+                    with v3.VRow():
                         v3.VNumberInput(
                             v_model=("symmetric_distance", 0),
                             label="Distance (mm)",
@@ -252,12 +250,11 @@ class TrameSlicerRadialMenu(RadMenu):
                         v_if=("selected_tool[0] == 1 && selected_tool[1] == 4", [0, 0]),
                         width="300px",
                     ),
-                    v3.VRow(classes="mt-1"),
+                    v3.VRow(),
                     v3.VRadioGroup(
                         v_model=("brush_interaction_mode", "continuous"),
                         label="Brush interaction mode",
-                        inline=True,
-                        hide_details=True,
+                        classes="pt-8",
                     ),
                 ):
                     for mode in self.brush_interaction_modes:

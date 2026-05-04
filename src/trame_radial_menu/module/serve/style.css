@@ -1,0 +1,12 @@
+.centerAbs[data-v-785dcb9b] {
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+.sideDiv[data-v-785dcb9b] {
+  position: absolute;
+}
+svg[data-v-6f99b7a6] {
+  pointer-events: none;
+  position: absolute;
+  transform: "translate(-50%, -50%)";
+}

@@ -1,5 +1,11 @@
 def test_import():
-    from radial_menu.widgets.radial_menu import CustomWidget  # noqa: PLC0415
-
-    # For components only, the CustomWidget is also importable via trame
-    from trame.widgets.radial_menu import CustomWidget  # noqa: F401, F811, PLC0415
+    from trame.widgets.radial_menu import (  # noqa: PLC0415
+        RadItem,
+        RadMenu,
+        RadWheel,
+    )
+    from trame_radial_menu.widgets.radial_menu import (  # noqa: F401, PLC0415, F811
+        RadItem,
+        RadMenu,
+        RadWheel,
+    )
