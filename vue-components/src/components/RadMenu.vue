@@ -138,8 +138,8 @@ const clickIgnoreElemsChildren = ref([]);
 provide('registerClickAvoidElem', (elem) => {clickIgnoreElemsChildren.value.push(elem);});
 
 // Element from this template
-const closeMenuElem = ref(null);
-const openSideMenuElem = ref(null);
+const closeMenuButtonElem = ref(null);
+const openSideMenuButtonElem = ref(null);
 const sideMenuElem = ref(null);
 const clickIgnoreElemsTemplate = [
     closeMenuButtonElem,
