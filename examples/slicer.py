@@ -165,7 +165,7 @@ class TrameSlicerRadialMenu(RadMenu):
                             )
 
             # Side menu
-            with self.sideMenu():
+            with self.side_menu():
                 # Brush panel
                 with (
                     v3.VCard(

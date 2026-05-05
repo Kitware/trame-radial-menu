@@ -15,7 +15,7 @@
 import { provide, inject, ref, computed } from 'vue';
 
 
-// ### Setup
+// Setup
 
 const props = defineProps({
     innerRadius: { type: Number, default: -1 },
@@ -30,7 +30,7 @@ inject('parentRadMenu', () => {throw new Error("RadWheel must be under a RadMenu
 
 
 
-// ### Handle inner and outer radii
+//#region Handle inner and outer radii
 
 const parentInnerAndOuterRadii = inject('innerAndOuterRadii', null);
 const innerRadius = computed(() => {
@@ -50,17 +50,19 @@ const outerRadius = computed(() => {
 
 provide('innerAndOuterRadii', [innerRadius, outerRadius]);
 const maxRadius = inject('maxRadius');
+//#endregion
 
 
 
-// ### Registers
+//#region Registers
 
 // Radius
 inject('registerMaxRadius')(outerRadius);
+//#endregion
 
 
 
-// ### Handle angles and sizes of items
+//#region Handle angles and sizes of items
 
 const totalAngle = computed(()=>props.endAngle - props.beginAngle);
 const sizes = ref([]);
@@ -102,6 +104,7 @@ provide('registerSize',
 provide('unregisterSize', (size)=>{
     sizes.value = sizes.value.filter(item => item !== size)
 })
+//#endregion
 </script>
 
 <style scoped>

@@ -2,9 +2,11 @@ from contextlib import contextmanager
 
 from trame_client.widgets.core import AbstractElement
 
-from trame.widgets import vuetify3 as v3
+from trame.widgets import html
 
 from .. import module
+
+html.Template.slot_names.update(["side-menu"])
 
 
 class HtmlElement(AbstractElement):
@@ -27,11 +29,12 @@ class RadMenu(HtmlElement):
             "rad-menu",
             **kwargs,
         )
+        self._event_names += [("click_close", "click:close")]
 
     @contextmanager
-    def sideMenu(self):
-        v3.Template.slot_names.update(["side-menu"])
-        with v3.Template(v_slot_side_menu=""):
+    def side_menu(self):
+        html.Template.slot_names.update(["side-menu"])
+        with html.Template(v_slot_side_menu=""):
             yield
 
 

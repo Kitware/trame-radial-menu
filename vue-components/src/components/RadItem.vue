@@ -9,13 +9,12 @@ import { inject, computed, onMounted, ref, onUnmounted } from 'vue';
 import { polar } from '@/utils/geometry.js';
 
 
-// ### Setup
+// Setup
 
 const props = defineProps({
     label: {type: String, default: ''},
     icon: {type: String, default: ''},
     size: {type: Number, default: 1},
-    closeOnClick: {type: Boolean, default: true},
 })
 
 const emit = defineEmits([
@@ -26,7 +25,7 @@ inject('parentRadWheel', () => {throw new Error("RadItem must be under a RadWhee
 
 
 
-// ### Registers
+//#region Registers
 
 const itemElem = ref(null);
 inject('registerClickAvoidElem')(itemElem);
@@ -38,9 +37,10 @@ const [innerRadius, outerRadius] = inject('innerAndOuterRadii');
 inject('registerMaxRadius')(outerRadius);
 const menu_cx = inject('maxRadius');
 const menu_cy = menu_cx;
+//#endregion
 
 
-// ### Calculates angles, radii and positions
+//#region Calculates angles, radii and positions
 
 const lambdaRadius = (lambda) => (innerRadius.value + (outerRadius.value - innerRadius.value) * lambda);
 const iconRadius = 0.5;
@@ -56,7 +56,7 @@ const positionStyle = computed(() => ({
 onUnmounted(() => {
     inject("unregisterSize")(sizeRef);
 });
-
+//#endregion
 
 </script>
 <style scoped>

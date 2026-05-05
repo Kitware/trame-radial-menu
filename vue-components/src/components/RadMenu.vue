@@ -7,7 +7,7 @@
 
         <slot />
 
-        <div ref="closeMenuElem">
+        <div ref="closeMenuButtonElem">
             <v-tooltip text="Close menu">
                 <template v-slot:activator="{ props: tooltipActivatorProps }">
                     <v-btn
@@ -23,12 +23,11 @@
             </v-tooltip>
         </div>
 
-        <div ref="openSideMenuElem">
+        <div ref="openSideMenuButtonElem">
             <v-tooltip text="Open side menu">
                 <template v-slot:activator="{ props: tooltipActivatorProps }">
                     <v-btn
                         class="centerAbs"
-                        ref="sideMenuSwitchElem"
                         v-bind="tooltipActivatorProps"
                         :style="positionSwitchSideMenu"
                         :active="sideMenuOpen"
@@ -54,16 +53,16 @@
 
 <script setup>
 
-import { provide, inject, ref, computed, onMounted, onUnmounted, readonly} from 'vue';
+import { provide, inject, ref, computed, onMounted, onUnmounted} from 'vue';
 
 
-// ### Setup
+// Setup
 
 provide('parentRadMenu', () => {}); // Tell children component they are under a RadMenu
 
 
 
-// ### Handle maximum radius and tells it to children components
+//#region Handle maximum radius and tells it to children components
 
 // radii of all children
 const radii = ref([]);
@@ -82,10 +81,11 @@ provide('registerMaxRadius', (radius) => {
     radii.value.push(radius);
 });
 provide('maxRadius', maxRadius);
+//#endregion
 
 
 
-// ### Position elements
+//#region Position elements
 
 // page coordinates of mouse right click
 const cx = ref(0); const cy = ref(0);
@@ -115,10 +115,11 @@ const positionSwitchSideMenu = computed(() => ({
     left: `${maxRadius.value * 1.85}px`,
     top: `${maxRadius.value * 1.85}px`,
 }))
+//#endregion
 
 
 
-// ### Handle click and isOpen
+//#region Handle click and isOpen
 
 const isOpen = ref(false); // true if the menu must be shown
 const sideMenuOpen = ref(true); // true if the side menu must be shown
@@ -127,7 +128,7 @@ const closeMenu = () => {isOpen.value = false};
 defineExpose({ closeMenu }); // for parents to close it
 provide('closeMenu', closeMenu); // for children to close it
 
-// List of elements to ignore when clicking outside the menu to close it
+//#region List of elements to ignore when clicking outside the menu to close it
 
 // Elements from parents
 const clickIgnoreElemsParent = inject('avoidElems', []);
@@ -141,13 +142,14 @@ const closeMenuElem = ref(null);
 const openSideMenuElem = ref(null);
 const sideMenuElem = ref(null);
 const clickIgnoreElemsTemplate = [
-    closeMenuElem,
-    openSideMenuElem,
+    closeMenuButtonElem,
+    openSideMenuButtonElem,
     sideMenuElem,
 ]
 
 // All
 const clickIgnoreElems = computed(()=>[...clickIgnoreElemsParent, ...clickIgnoreElemsChildren.value, ...clickIgnoreElemsTemplate]);
+//#endregion
 
 const rightClick = (event) => {
     event.preventDefault();
@@ -171,6 +173,7 @@ onUnmounted(() => {
   document.removeEventListener('mousedown', leftClick);
   document.removeEventListener('contextmenu', rightClick);
 });
+//#endregion
 
 </script>
 
