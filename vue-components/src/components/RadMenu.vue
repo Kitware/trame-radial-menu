@@ -58,11 +58,11 @@ import { provide, ref, computed, onMounted, onUnmounted, defineModel} from 'vue'
 // Setup
 
 const props = defineProps({
-    color: {type:String, default: "#7777"}
+    color: {type:String, default: "#77777777"}
 });
 
+const sideMenuOpen = defineModel('sidemenuopen', true);
 const isOpen = defineModel('open', false);
-const sideMenuOpen = defineModel('side_menu_open', true);
 
 provide('parentRadMenu', () => {}); // Tell children component they are under a RadMenu
 

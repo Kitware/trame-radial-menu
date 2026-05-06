@@ -29,7 +29,7 @@ class RadMenu(HtmlElement):
             "rad-menu",
             **kwargs,
         )
-        self._event_names += [("click_close", "click:close")]
+        self._attr_names += ["color"]
 
     @contextmanager
     def side_menu(self):
