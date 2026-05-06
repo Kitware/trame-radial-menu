@@ -1,5 +1,5 @@
 <template>
-    <div :style="positionStyle" ref="itemElem">
+    <div :style="positionStyle">
         <slot />
     </div>
 </template>
@@ -15,20 +15,15 @@ const props = defineProps({
     label: {type: String, default: ''},
     icon: {type: String, default: ''},
     size: {type: Number, default: 1},
-})
+});
 
-const emit = defineEmits([
-    'click'
-]);
+const closeMenu = inject('closeMenu');
 
 inject('parentRadWheel', () => {throw new Error("RadItem must be under a RadWheel");})();
 
 
 
 //#region Registers
-
-const itemElem = ref(null);
-inject('registerClickAvoidElem')(itemElem);
 
 const sizeRef = computed(()=>props.size);
 const [beginAngle, endAngle] = inject('registerSize')(sizeRef);

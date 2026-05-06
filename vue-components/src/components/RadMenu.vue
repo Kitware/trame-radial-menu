@@ -7,34 +7,34 @@
 
         <slot />
 
-        <div ref="closeMenuButtonElem">
+        <div>
             <v-tooltip text="Close menu">
                 <template v-slot:activator="{ props: tooltipActivatorProps }">
                     <v-btn
                         class="centerAbs"
-                        v-bind="tooltipActivatorProps"
                         :style="positionStyleCenterButton"
+                        v-bind="tooltipActivatorProps"
                         icon="mdi-close"
-                        size="80"
-                        variant="tonal"
                         @click="isOpen = false"
+                        :color="color"
+                        size="80"
                     />
                 </template>
             </v-tooltip>
         </div>
 
-        <div ref="openSideMenuButtonElem">
+        <div>
             <v-tooltip text="Open side menu">
                 <template v-slot:activator="{ props: tooltipActivatorProps }">
                     <v-btn
                         class="centerAbs"
-                        v-bind="tooltipActivatorProps"
                         :style="positionSwitchSideMenu"
+                        v-bind="tooltipActivatorProps"
                         :active="sideMenuOpen"
                         :icon="sideMenuOpen?'mdi-chevron-left':'mdi-chevron-right'"
-                        size="40"
-                        variant="tonal"
                         @click="sideMenuOpen = !sideMenuOpen"
+                        :color="color"
+                        size="40"
                     />
                 </template>
             </v-tooltip>
@@ -44,7 +44,6 @@
             class="sideDiv"
             v-show="sideMenuOpen"
             :style="positionStyleSide"
-            ref="sideMenuElem"
         >
             <slot name="side-menu" />
         </div>
@@ -53,10 +52,17 @@
 
 <script setup>
 
-import { provide, inject, ref, computed, onMounted, onUnmounted} from 'vue';
+import { provide, ref, computed, onMounted, onUnmounted, defineModel} from 'vue';
 
 
 // Setup
+
+const props = defineProps({
+    color: {type:String, default: "#7777"}
+});
+
+const isOpen = defineModel('open', false);
+const sideMenuOpen = defineModel('side_menu_open', true);
 
 provide('parentRadMenu', () => {}); // Tell children component they are under a RadMenu
 
@@ -119,58 +125,17 @@ const positionSwitchSideMenu = computed(() => ({
 
 
 
-//#region Handle click and isOpen
-
-const isOpen = ref(false); // true if the menu must be shown
-const sideMenuOpen = ref(true); // true if the side menu must be shown
-
-const closeMenu = () => {isOpen.value = false};
-defineExpose({ closeMenu }); // for parents to close it
-provide('closeMenu', closeMenu); // for children to close it
-
-//#region List of elements to ignore when clicking outside the menu to close it
-
-// Elements from parents
-const clickIgnoreElemsParent = inject('avoidElems', []);
-
-// Elements from <slot />
-const clickIgnoreElemsChildren = ref([]);
-provide('registerClickAvoidElem', (elem) => {clickIgnoreElemsChildren.value.push(elem);});
-
-// Element from this template
-const closeMenuButtonElem = ref(null);
-const openSideMenuButtonElem = ref(null);
-const sideMenuElem = ref(null);
-const clickIgnoreElemsTemplate = [
-    closeMenuButtonElem,
-    openSideMenuButtonElem,
-    sideMenuElem,
-]
-
-// All
-const clickIgnoreElems = computed(()=>[...clickIgnoreElemsParent, ...clickIgnoreElemsChildren.value, ...clickIgnoreElemsTemplate]);
-//#endregion
-
+//#region Right click opens menu at cursor position
 const rightClick = (event) => {
     event.preventDefault();
     isOpen.value = true; cx.value = event.pageX; cy.value = event.pageY;
 }
-const leftClick = (event) => {
-    if (
-        !clickIgnoreElems.value.some((elem) => elem.value.contains(event.target))
-    ) {
-        if (isOpen.value) {isOpen.value = false;}
-    }
-}
-
 
 onMounted(() => {
-    document.addEventListener('mousedown', leftClick);
     document.addEventListener('contextmenu', rightClick);
 });
 
 onUnmounted(() => {
-  document.removeEventListener('mousedown', leftClick);
   document.removeEventListener('contextmenu', rightClick);
 });
 //#endregion

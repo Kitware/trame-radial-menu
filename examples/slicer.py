@@ -130,7 +130,7 @@ class TrameSlicerRadialMenu(RadMenu):
 
     def _build_ui(self):
         with self:
-            with RadWheel():
+            with RadWheel(color="#777b"):
                 for tool in self.marker_tools:
                     with (
                         RadItem(),
@@ -268,7 +268,8 @@ class ExampleRadialMenu(TrameApp):
 
     def _build_ui(self):
         with VAppLayout(self.server) as self.ui, self.ui.root:
-            TrameSlicerRadialMenu()
+            v3.VSwitch(v_model=("show_it", False))
+            TrameSlicerRadialMenu(v_model=("show_it",))
 
 
 def main():

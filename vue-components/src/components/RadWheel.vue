@@ -1,8 +1,9 @@
 <template>
     <svg :width="maxRadius * 2" :height="maxRadius * 2">
-        <circle
-            :cx="maxRadius" :cy="maxRadius" :r="outerRadius"
+        <path
+            :d="donutPath"
             :fill="props.color"
+            :fill-rule="evenodd"
         />
     </svg>
     <div ref="slotElem">
@@ -22,7 +23,7 @@ const props = defineProps({
     outerRadius: { type: Number, default: -1 },
     beginAngle: { type: Number, default: 0 },
     endAngle: { type: Number, default: 360 },
-    color: {type: String, default: '#aaa5'},
+    color: {type: String, default: '#7777'},
 });
 
 provide('parentRadWheel', () => {}); // Tell children component they are under a RadWheel
@@ -59,6 +60,21 @@ const maxRadius = inject('maxRadius');
 // Radius
 inject('registerMaxRadius')(outerRadius);
 //#endregion
+
+
+
+// Draw the donut
+const donutPath = computed(() => {
+    return `
+        M ${maxRadius.value - outerRadius.value},${maxRadius.value}
+        A ${outerRadius.value} ${outerRadius.value} 0 1 1 ${maxRadius.value + outerRadius.value},${maxRadius.value}
+        A ${outerRadius.value} ${outerRadius.value} 0 1 1 ${maxRadius.value - outerRadius.value},${maxRadius.value}
+        M ${maxRadius.value - innerRadius.value},${maxRadius.value}
+        A ${innerRadius.value} ${innerRadius.value} 0 1 0 ${maxRadius.value + innerRadius.value},${maxRadius.value}
+        A ${innerRadius.value} ${innerRadius.value} 0 1 0 ${maxRadius.value - innerRadius.value},${maxRadius.value}
+        Z
+    `;
+});
 
 
 
