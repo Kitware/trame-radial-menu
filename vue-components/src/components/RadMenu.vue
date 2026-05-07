@@ -7,39 +7,68 @@
 
         <slot />
 
-        <div>
-            <v-tooltip text="Close menu">
+        <div
+            :style="positionStyleCenterButton"
+            class="centerAbs"
+        >
+            <v-tooltip v-if="closeMenu" text="Close menu">
                 <template v-slot:activator="{ props: tooltipActivatorProps }">
                     <v-btn
-                        class="centerAbs"
-                        :style="positionStyleCenterButton"
+                        class="radMenuButton"
                         v-bind="tooltipActivatorProps"
                         icon="mdi-close"
                         @click="isOpen = false"
+                        variant="flat"
                         :color="color"
-                        size="80"
+                        :size="2*minRadius"
                     />
                 </template>
             </v-tooltip>
+            <div v-else>
+                <slot name="central-button"></slot>
+            </div>
         </div>
-
-        <div>
-            <v-tooltip text="Open side menu">
-                <template v-slot:activator="{ props: tooltipActivatorProps }">
-                    <v-btn
-                        class="centerAbs"
-                        :style="positionSwitchSideMenu"
-                        v-bind="tooltipActivatorProps"
-                        :active="sideMenuOpen"
-                        :icon="sideMenuOpen?'mdi-chevron-left':'mdi-chevron-right'"
-                        @click="sideMenuOpen = !sideMenuOpen"
-                        :color="color"
-                        size="40"
-                    />
-                </template>
-            </v-tooltip>
+        <div v-for="placeholderName in Object.keys(placeholders)" :key="placeholderName">
+            <div
+                :style="placeholdersPosition[placeholderName]"
+                class="centerAbs"
+            >
+                <div v-if="placeholderName != 'right-bottom' && placeholderName != 'bottom-right'">
+                    <slot :name="placeholderName" />
+                </div>
+                <div v-else-if="placeholderName == 'right-bottom'">
+                    <v-tooltip text="Drag menu">
+                        <template v-slot:activator="{ props: tooltipActivatorProps }">
+                            <v-btn
+                                class="radMenuButton dragZone"
+                                v-bind="tooltipActivatorProps"
+                                icon="mdi-drag"
+                                @mousedown="startDrag"
+                                :color="color"
+                                variant="flat"
+                                size="40"
+                            />
+                        </template>
+                    </v-tooltip>
+                </div>
+                <div v-else-if="placeholderName == 'bottom-right'">
+                    <v-tooltip text="Open side menu">
+                        <template v-slot:activator="{ props: tooltipActivatorProps }">
+                            <v-btn
+                                class="radMenuButton"
+                                v-bind="tooltipActivatorProps"
+                                :active="sideMenuOpen"
+                                :icon="sideMenuOpen?'mdi-chevron-left':'mdi-chevron-right'"
+                                @click="sideMenuOpen = !sideMenuOpen"
+                                :color="color"
+                                variant="flat"
+                                size="40"
+                            />
+                        </template>
+                    </v-tooltip>
+                </div>
+            </div>
         </div>
-
         <div
             class="sideDiv"
             v-show="sideMenuOpen"
@@ -58,6 +87,7 @@ import { provide, ref, computed, onMounted, onUnmounted, defineModel} from 'vue'
 // Setup
 
 const props = defineProps({
+    closeMenu: {type:Boolean, default: true},
     color: {type:String, default: "#77777777"}
 });
 
@@ -73,17 +103,10 @@ provide('parentRadMenu', () => {}); // Tell children component they are under a 
 // radii of all children
 const radii = ref([]);
 
-// maximum radii of all children
-const maxRadius = computed(() => {
-    let max = 0;
-    radii.value.forEach((radius) => {
-        if (radius.value > max) {
-            max = radius.value;
-        }
-    });
-    return max;
-});
-provide('registerMaxRadius', (radius) => {
+const maxRadius = computed(() => Math.max(...radii.value.map(r => r.value)));
+const minRadius = computed(() => Math.min(...radii.value.map(r => r.value)));
+
+provide('registerRadius', (radius) => {
     radii.value.push(radius);
 });
 provide('maxRadius', maxRadius);
@@ -116,11 +139,30 @@ const positionStyleSide = computed(() => ({
     top: `0px`,
 }))
 
-// position the switch to open side menu on the bottom right of the menu
-const positionSwitchSideMenu = computed(() => ({
-    left: `${maxRadius.value * 1.85}px`,
-    top: `${maxRadius.value * 1.85}px`,
-}))
+// position the 8 small placeholders
+const a = 0.95; const b = 0.65;
+const placeholders = {
+    "right-bottom": [1+a, 1+b],
+    "bottom-right": [1+b, 1+a],
+    "bottom-left": [1-b, 1+a],
+    "left-bottom": [1-a, 1+b],
+    "left-top": [1-a, 1-b],
+    "top-left": [1-b, 1-a],
+    "top-right": [1+b, 1-a],
+    "right-top": [1+a, 1-b]
+};
+
+const placeholdersPosition = computed(() => {
+    let res = {};
+    for (let key in placeholders) {
+        let [x, y] = placeholders[key];
+        res[key] = {
+            left: `${maxRadius.value * x}px`,
+            top: `${maxRadius.value * y}px`
+        }
+    }
+    return res;
+});
 //#endregion
 
 
@@ -140,6 +182,38 @@ onUnmounted(() => {
 });
 //#endregion
 
+
+
+//#region Drag menu
+const isDragging = ref(false)
+const startX = ref(0); const startY = ref(0);
+const initialMouseX = ref(0); const initialMouseY = ref(0);
+
+const startDrag = (event) => {
+    isDragging.value = true;
+    startX.value = cx.value;
+    startY.value = cy.value;
+    initialMouseX.value = event.pageX;
+    initialMouseY.value = event.pageY;
+    window.addEventListener('mousemove', onDrag);
+    window.addEventListener('mouseup', stopDrag);
+    event.preventDefault;
+}
+
+const onDrag = (event) => {
+    if (!isDragging.value) return
+    let dx = event.pageX - initialMouseX.value
+    let dy = event.pageY - initialMouseY.value
+    cx.value = startX.value + dx
+    cy.value = startY.value + dy
+}
+
+const stopDrag = () => {
+    isDragging.value = false
+    window.removeEventListener('mousemove', onDrag)
+    window.removeEventListener('mouseup', stopDrag)
+}
+//#endregion
 </script>
 
 <style scoped>
@@ -151,6 +225,13 @@ onUnmounted(() => {
 
 .sideDiv {
     position: absolute;
+}
+
+.dragZone {
+    cursor: grab;
+}
+.dragZone:active {
+    cursor: grabbing;
 }
 
 </style>

@@ -58,7 +58,8 @@ const maxRadius = inject('maxRadius');
 //#region Registers
 
 // Radius
-inject('registerMaxRadius')(outerRadius);
+inject('registerRadius')(innerRadius);
+inject('registerRadius')(outerRadius);
 //#endregion
 
 

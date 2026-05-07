@@ -1,12 +1,22 @@
-from contextlib import contextmanager
-
 from trame_client.widgets.core import AbstractElement
 
 from trame.widgets import html
 
 from .. import module
 
-html.Template.slot_names.update(["side-menu"])
+new_slot_names = [
+    "central-button",
+    "side-menu",
+    "right-bottom",
+    "bottom-right",
+    "bottom-left",
+    "left-bottom",
+    "left-top",
+    "top-left",
+    "top-right",
+    "right-top",
+]
+html.Template.slot_names.update(new_slot_names)
 
 
 class HtmlElement(AbstractElement):
@@ -29,13 +39,10 @@ class RadMenu(HtmlElement):
             "rad-menu",
             **kwargs,
         )
-        self._attr_names += ["color"]
-
-    @contextmanager
-    def side_menu(self):
-        html.Template.slot_names.update(["side-menu"])
-        with html.Template(v_slot_side_menu=""):
-            yield
+        self._attr_names += [
+            "closeMenu",
+            "color",
+        ]
 
 
 class RadWheel(HtmlElement):
@@ -60,8 +67,6 @@ class RadItem(HtmlElement):
             **kwargs,
         )
         self._attr_names += [
-            "label",
-            "icon",
             "size",
-            "closeOnClick",
+            "tooltipLabel",
         ]

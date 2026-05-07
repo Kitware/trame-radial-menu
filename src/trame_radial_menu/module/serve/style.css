@@ -1,11 +1,17 @@
-.centerAbs[data-v-53e4b622] {
+.centerAbs[data-v-10c3fbc1] {
   position: absolute;
   transform: translate(-50%, -50%);
 }
-.sideDiv[data-v-53e4b622] {
+.sideDiv[data-v-10c3fbc1] {
   position: absolute;
 }
-svg[data-v-84bafdb8] {
+.dragZone[data-v-10c3fbc1] {
+  cursor: grab;
+}
+.dragZone[data-v-10c3fbc1]:active {
+  cursor: grabbing;
+}
+svg[data-v-d52d222d] {
   pointer-events: none;
   position: absolute;
   transform: "translate(-50%, -50%)";
