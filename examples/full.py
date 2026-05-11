@@ -1,4 +1,5 @@
 from trame.app import TrameApp
+from trame.decorators import change
 from trame.ui.vuetify3 import VAppLayout
 
 from trame.widgets import html
@@ -33,7 +34,13 @@ class TrameSlicerRadialMenu(RadMenu):
                 with RadItem(tooltipLabel="Button 3", size=("ruler_size",)):
                     v3.VBtn(icon="mdi-ruler")
 
-                with RadWheel(color=("outer_color",)):
+                with RadWheel(
+                    color=("outer_color",),
+                    beginAngle=("outer_begin_angle",),
+                    endAngle=("outer_end_angle",),
+                    innerRadius=("outer_inner_radius",),
+                    outerRadius=("outer_outer_radius",),
+                ):
                     with RadItem(tooltipLabel="Select side menu 0"):
                         v3.VBtn(
                             icon="mdi-trash-can-outline",
@@ -86,6 +93,16 @@ class ExampleRadialMenu(TrameApp):
         super().__init__(server)
         self._build_ui()
 
+    @change("use_outer_inner_radius")
+    def change_outer_inner_radius(self, use_outer_inner_radius, **_):
+        if not (use_outer_inner_radius):
+            self.state["outer_inner_radius"] = -1
+
+    @change("use_outer_outer_radius")
+    def change_outer_outer_radius(self, use_outer_outer_radius, **_):
+        if not (use_outer_outer_radius):
+            self.state["outer_outer_radius"] = -1
+
     def _build_ui(self):
         with VAppLayout(self.server) as self.ui, self.ui.root:
             html.H1("Right click to open the radial menu")
@@ -137,6 +154,30 @@ class ExampleRadialMenu(TrameApp):
                         max=4,
                     )
                 with v3.VCard(title="Outer Wheel", color=("outer_color",)):
+                    v3.VCheckbox(
+                        label="force inner radius",
+                        v_model=("use_outer_inner_radius", False),
+                    )
+                    v3.VSlider(
+                        v_if="use_outer_inner_radius",
+                        thumb_label="always",
+                        v_model=("outer_inner_radius", -1.0),
+                        label="inner radius",
+                        min=0,
+                        max=360,
+                    )
+                    v3.VCheckbox(
+                        label="force outer radius",
+                        v_model=("use_outer_outer_radius", False),
+                    )
+                    v3.VSlider(
+                        v_if="use_outer_outer_radius",
+                        thumb_label="always",
+                        v_model=("outer_outer_radius", -1.0),
+                        label="outer radius",
+                        min=0,
+                        max=360,
+                    )
                     v3.VColorPicker(v_model=("outer_color", "#777777bb"))
                     v3.VSlider(
                         thumb_label="always",
