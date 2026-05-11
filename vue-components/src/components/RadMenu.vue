@@ -11,7 +11,7 @@
             :style="positionStyleCenterButton"
             class="centerAbs"
         >
-            <v-tooltip v-if="closeMenu" text="Close menu">
+            <v-tooltip v-if="closeMenuButton" text="Close menu">
                 <template v-slot:activator="{ props: tooltipActivatorProps }">
                     <v-btn
                         class="radMenuButton"
@@ -36,13 +36,13 @@
                 <div v-if="placeholderName != 'right-bottom' && placeholderName != 'bottom-right'">
                     <slot :name="placeholderName" />
                 </div>
-                <div v-else-if="placeholderName == 'right-bottom'">
+                <div v-else-if="placeholderName == 'bottom-right'">
                     <v-tooltip text="Drag menu">
                         <template v-slot:activator="{ props: tooltipActivatorProps }">
                             <v-btn
                                 class="radMenuButton dragZone"
                                 v-bind="tooltipActivatorProps"
-                                icon="mdi-drag"
+                                icon="mdi-cursor-move"
                                 @mousedown="startDrag"
                                 :color="color"
                                 variant="flat"
@@ -51,7 +51,7 @@
                         </template>
                     </v-tooltip>
                 </div>
-                <div v-else-if="placeholderName == 'bottom-right'">
+                <div v-else-if="placeholderName == 'right-bottom'">
                     <v-tooltip text="Open side menu">
                         <template v-slot:activator="{ props: tooltipActivatorProps }">
                             <v-btn
@@ -87,8 +87,9 @@ import { provide, ref, computed, onMounted, onUnmounted, defineModel} from 'vue'
 // Setup
 
 const props = defineProps({
-    closeMenu: {type:Boolean, default: true},
-    color: {type:String, default: "#77777777"}
+    closeMenuButton: {type:Boolean, default: true},
+    closeMenuButtonRadius: {type: Number, default: -1},
+    color: {type:String, default: "#77777777"},
 });
 
 const sideMenuOpen = defineModel('sidemenuopen', true);

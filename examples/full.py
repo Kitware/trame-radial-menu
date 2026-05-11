@@ -111,6 +111,18 @@ class ExampleRadialMenu(TrameApp):
                     v_model=("close_menu_button", True),
                     label="Central close menu button",
                 )
+                v3.VCheckbox(
+                    label="force inner radius",
+                    v_model=("use_outer_inner_radius", False),
+                )
+                v3.VSlider(
+                    v_if="use_outer_inner_radius",
+                    thumb_label="always",
+                    v_model=("outer_inner_radius", -1.0),
+                    label="inner radius",
+                    min=0,
+                    max=360,
+                )
                 v3.VSwitch(v_model=("show_rad_menu", False), label="Open radial menu")
                 v3.VColorPicker(v_model=("menu_color", "#47FF4077"))
                 v3.VSwitch(
@@ -198,7 +210,8 @@ class ExampleRadialMenu(TrameApp):
                 v_model_open=("show_rad_menu",),
                 v_model_sidemenuopen=("show_rad_menu_side_menu",),
                 color=("menu_color",),
-                closeMenu=("close_menu_button",),
+                closeMenuButton=("close_menu_button",),
+                closeMenuButtonRadius=("close_menu_button_radius",),
             )
 
 

@@ -40,7 +40,8 @@ class RadMenu(HtmlElement):
             **kwargs,
         )
         self._attr_names += [
-            "closeMenu",
+            "closeMenuButton",
+            "closeMenuButtonRadius",
             "color",
         ]
 
