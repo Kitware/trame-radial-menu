@@ -19,8 +19,8 @@ class TrameSlicerRadialMenu(RadMenu):
         super().__init__(**kwargs)
         self._build_ui()
 
-    def selectMenu(self, number):
-        print(number)  # noqa: T201
+    def set_selected_menu(self, number: int):
+        self.state.selected_menu = number
 
     def _build_ui(self):
         with self:
@@ -51,27 +51,27 @@ class TrameSlicerRadialMenu(RadMenu):
                     CustomButtonRadItem(
                         text="Select side menu 0",
                         icon="mdi-trash-can-outline",
-                        click=lambda: self.selectMenu(0),
+                        click=lambda: self.set_selected_menu(0),
                     )
                     CustomButtonRadItem(
                         text="Select side menu 1",
                         icon="mdi-cube-outline",
-                        click=lambda: self.selectMenu(1),
+                        click=lambda: self.set_selected_menu(1),
                     )
                     CustomButtonRadItem(
                         text="Select side menu 2",
                         icon="mdi-vector-polygon",
-                        click=lambda: self.selectMenu(2),
+                        click=lambda: self.set_selected_menu(2),
                     )
                     CustomButtonRadItem(
                         text="Select side menu 3",
                         icon="mdi-angle-acute",
-                        click=lambda: self.selectMenu(3),
+                        click=lambda: self.set_selected_menu(3),
                     )
                     CustomButtonRadItem(
                         text="Select side menu 4",
                         icon="mdi-vector-polyline",
-                        click=lambda: self.selectMenu(4),
+                        click=lambda: self.set_selected_menu(4),
                     )
 
             # Central placeholder
@@ -118,6 +118,10 @@ class ExampleRadialMenu(TrameApp):
     def change_outer_outer_radius(self, use_outer_outer_radius, **_):
         if not (use_outer_outer_radius):
             self.state["outer_outer_radius"] = -1
+
+    @change("selected_menu")
+    def change_selected_menu(self, selected_menu, **_):
+        print(f"Menu {selected_menu} selected !")  # noqa: T201
 
     def _build_ui(self):
         with VAppLayout(self.server) as self.ui, self.ui.root:
