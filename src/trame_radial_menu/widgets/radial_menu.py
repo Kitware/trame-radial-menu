@@ -40,7 +40,6 @@ class RadMenu(HtmlElement):
             **kwargs,
         )
         self._attr_names += [
-            "closeMenuButton",
             "closeMenuButtonRadius",
             "color",
         ]
@@ -69,5 +68,4 @@ class RadItem(HtmlElement):
         )
         self._attr_names += [
             "size",
-            "tooltipLabel",
         ]

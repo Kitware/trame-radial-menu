@@ -1,18 +1,22 @@
-.centerAbs[data-v-67a3dd50] {
+.centerAbs[data-v-62fd053a] {
   position: absolute;
   transform: translate(-50%, -50%);
 }
-.sideDiv[data-v-67a3dd50] {
+.sideDiv[data-v-62fd053a] {
   position: absolute;
 }
-.dragZone[data-v-67a3dd50] {
+.dragZone[data-v-62fd053a] {
   cursor: grab;
 }
-.dragZone[data-v-67a3dd50]:active {
+.dragZone[data-v-62fd053a]:active {
   cursor: grabbing;
 }
-svg[data-v-d52d222d] {
+svg[data-v-e93ff954] {
   pointer-events: none;
   position: absolute;
   transform: "translate(-50%, -50%)";
+}
+.centerAbs[data-v-54925aad] {
+  position: absolute;
+  transform: translate(-50%, -50%);
 }
