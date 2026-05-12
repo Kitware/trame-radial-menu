@@ -14,8 +14,9 @@ export function donutSlicePath(cx, cy, r1, r2, start, end, totalSize) {
 
   const full = end - start >= 360
 
+  // A full donut can't be drawn with a single donut slice
   if (full) {
-    // split into two semicircles.
+    // It needs to be split into two semicircles.
     const o1 = polar(cx, cy, r1, start)
     const o2 = polar(cx, cy, r1, start + 180)
     const i1 = polar(cx, cy, r2, start)
@@ -47,9 +48,11 @@ export function donutSlicePath(cx, cy, r1, r2, start, end, totalSize) {
   ].join(' ')
 }
 
-// When thisBeginSize and thisEndSize are between 0 and totalSize, returns
-// thisBeginAngle and thisEndAngle between beginAngle and endAngle, shifted so
-// the thisMidAngle is at beginAngle when thisBeginSize=0
+// There is an affine relation between thisBeginAngle and thisBeginSize and
+// between thisEndAngle and thisEndSize. When thisBeginSize and thisEndSize are
+// between 0 and totalSize, thisBeginAngle and thisEndAngle are between
+// beginAngle and endAngle, we slightly shift so the thisMidAngle is at
+// beginAngle when thisBeginSize=0
 export function thisBeginAndEndAnglesFromSizes(
   beginAngle,
   endAngle,
@@ -58,9 +61,11 @@ export function thisBeginAndEndAnglesFromSizes(
   thisEndSize,
 ) {
   const totalAngle = endAngle - beginAngle
-  const offset = beginAngle - totalAngle / (2 * totalSize) // shifted so thisMidAngle is at beginAngle when thisBeginSize=0
-  const thisBeginAngle = offset + (totalAngle / totalSize) * thisBeginSize
-  const thisEndAngle = offset + (totalAngle / totalSize) * thisEndSize
+  const offset = -totalAngle / (2 * totalSize) // shifted so thisMidAngle is at beginAngle when thisBeginSize=0
+  const thisBeginAngle =
+    beginAngle + offset + (totalAngle / totalSize) * thisBeginSize
+  const thisEndAngle =
+    beginAngle + offset + (totalAngle / totalSize) * thisEndSize
   return [thisBeginAngle, thisEndAngle]
 }
 

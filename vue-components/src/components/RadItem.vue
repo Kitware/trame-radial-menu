@@ -24,14 +24,14 @@ inject('parentRadWheel', () => {
 const sizeRef = computed(() => props.size)
 const beginAndEndAngle = inject('registerSize')(sizeRef)
 const [innerRadius, outerRadius] = inject('innerAndOuterRadii')
-const menu_cx = inject('maxRadius')
-const menu_cy = menu_cx
+const maxRadius = inject('maxRadius')
 
-// Calculates angles, radii and positions
+// Calculates angle, radius and position
 
 const midAngle = computed(() => (beginAndEndAngle.value[0] + beginAndEndAngle.value[1]) / 2)
+const midRadius = computed(() => (innerRadius.value + outerRadius.value) / 2)
 const center_point = computed(() =>
-  polar(menu_cx.value, menu_cy.value, (innerRadius.value + outerRadius.value) / 2, midAngle.value)
+  polar(maxRadius.value, maxRadius.value, midRadius.value, midAngle.value)
 )
 
 const positionStyle = computed(() => pointToStyle([center_point.value.x, center_point.value.y]))

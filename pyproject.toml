@@ -7,7 +7,6 @@ authors = [
 ]
 dependencies = [
     "trame_client>=3.10",
-    "trame-vuetify",
 ]
 requires-python = ">=3.9"
 readme = "README.rst"
@@ -25,12 +24,6 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-app = [
-    "pywebview",
-]
-jupyter = [
-    "jupyterlab",
-]
 dev = [
     "pre-commit",
     "ruff",

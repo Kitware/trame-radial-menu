@@ -7,8 +7,8 @@ from trame.widgets import vuetify3 as v3
 from trame.widgets.radial_menu import RadItem, RadMenu, RadWheel
 
 
-class CustomButton(RadItem):
-    def __init__(self, text, icon, click=lambda: None, **kwargs):
+class CustomButtonRadItem(RadItem):
+    def __init__(self, text: str, icon: str, click=lambda: None, **kwargs):
         super().__init__(**kwargs)
         with self, v3.VTooltip(text=text), html.Template(v_slot_activator="{ props }"):
             v3.VBtn(icon=icon, click=click, v_bind="props")
@@ -31,13 +31,15 @@ class TrameSlicerRadialMenu(RadMenu):
                 inner_radius=("inner_inner_radius",),
                 outer_radius=("inner_outer_radius",),
             ):
-                CustomButton(text="Button 1", icon="mdi-circle")
-                CustomButton(
+                CustomButtonRadItem(text="Button 1", icon="mdi-circle")
+                CustomButtonRadItem(
                     text="Print 'TEST'",
                     icon="mdi-square-outline",
                     click=lambda: print("TEST"),  # noqa: T201
                 )
-                CustomButton(text="Button 3", icon="mdi-ruler", size=("ruler_size",))
+                CustomButtonRadItem(
+                    text="Button 3", icon="mdi-ruler", size=("ruler_size",)
+                )
 
                 with RadWheel(
                     color=("outer_color",),
@@ -46,27 +48,27 @@ class TrameSlicerRadialMenu(RadMenu):
                     inner_radius=("outer_inner_radius",),
                     outer_radius=("outer_outer_radius",),
                 ):
-                    CustomButton(
+                    CustomButtonRadItem(
                         text="Select side menu 0",
                         icon="mdi-trash-can-outline",
                         click=lambda: self.selectMenu(0),
                     )
-                    CustomButton(
+                    CustomButtonRadItem(
                         text="Select side menu 1",
                         icon="mdi-cube-outline",
                         click=lambda: self.selectMenu(1),
                     )
-                    CustomButton(
+                    CustomButtonRadItem(
                         text="Select side menu 2",
                         icon="mdi-vector-polygon",
                         click=lambda: self.selectMenu(2),
                     )
-                    CustomButton(
+                    CustomButtonRadItem(
                         text="Select side menu 3",
                         icon="mdi-angle-acute",
                         click=lambda: self.selectMenu(3),
                     )
-                    CustomButton(
+                    CustomButtonRadItem(
                         text="Select side menu 4",
                         icon="mdi-vector-polyline",
                         click=lambda: self.selectMenu(4),

@@ -36,7 +36,7 @@ const parentInnerAndOuterRadii = inject('innerAndOuterRadii', null)
 const innerRadius = computed(() => {
   if (props.innerRadius >= 0) return props.innerRadius
   else if (parentInnerAndOuterRadii != null)
-    // inner radius is parent wheel's outer radius
+    // inner radius is parent wheel's outer radius when parent wheel exists
     return parentInnerAndOuterRadii[1].value
   else return 40
 })
@@ -46,11 +46,11 @@ const outerRadius = computed(() => {
 })
 
 provide('innerAndOuterRadii', [innerRadius, outerRadius])
-const maxRadius = inject('maxRadius')
 
 // Registers radii
 inject('registerRadius')(innerRadius)
 inject('registerRadius')(outerRadius)
+const maxRadius = inject('maxRadius')
 
 // Handle angles and sizes of items
 
@@ -74,8 +74,8 @@ const totalSize = computed(() => cumulSizes.value.at(-1))
 provide('registerSize', (size) => {
   sizes.value.push(size)
   const childId = computed(() => sizes.value.findIndex((elem) => elem === size))
-  const cumulSizeBegin = computed(() => cumulSizes.value.at(childId.value))
-  const cumulSizeEnd = computed(() => cumulSizes.value.at(childId.value + 1))
+  const cumulSizeBegin = computed(() => cumulSizes.value[childId.value])
+  const cumulSizeEnd = computed(() => cumulSizes.value[childId.value + 1])
 
   return computed(() =>
     thisBeginAndEndAnglesFromSizes(
