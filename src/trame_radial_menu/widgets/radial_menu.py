@@ -40,7 +40,7 @@ class RadMenu(HtmlElement):
             **kwargs,
         )
         self._attr_names += [
-            "closeMenuButtonRadius",
+            ("close_menu_button_radius", "closeMenuButtonRadius"),
             "color",
         ]
 
@@ -52,10 +52,10 @@ class RadWheel(HtmlElement):
             **kwargs,
         )
         self._attr_names += [
-            "innerRadius",
-            "outerRadius",
-            "beginAngle",
-            "endAngle",
+            ("inner_radius", "innerRadius"),
+            ("outer_radius", "outerRadius"),
+            ("begin_angle", "beginAngle"),
+            ("end_angle", "endAngle"),
             "color",
         ]
 

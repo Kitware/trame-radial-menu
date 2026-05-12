@@ -42,8 +42,7 @@ const innerRadius = computed(() => {
 })
 const outerRadius = computed(() => {
   if (props.outerRadius >= 0) return props.outerRadius
-  else if (parentInnerAndOuterRadii != null) return innerRadius.value + 60
-  else return 100
+  else return innerRadius.value + 60
 })
 
 provide('innerAndOuterRadii', [innerRadius, outerRadius])

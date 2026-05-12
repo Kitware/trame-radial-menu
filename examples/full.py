@@ -26,10 +26,10 @@ class TrameSlicerRadialMenu(RadMenu):
         with self:
             with RadWheel(
                 color=("inner_color",),
-                beginAngle=("inner_begin_angle",),
-                endAngle=("inner_end_angle",),
-                innerRadius=("inner_inner_radius",),
-                outerRadius=("inner_outer_radius",),
+                begin_angle=("inner_begin_angle",),
+                end_angle=("inner_end_angle",),
+                inner_radius=("inner_inner_radius",),
+                outer_radius=("inner_outer_radius",),
             ):
                 CustomButton(text="Button 1", icon="mdi-circle")
                 CustomButton(
@@ -41,10 +41,10 @@ class TrameSlicerRadialMenu(RadMenu):
 
                 with RadWheel(
                     color=("outer_color",),
-                    beginAngle=("outer_begin_angle",),
-                    endAngle=("outer_end_angle",),
-                    innerRadius=("outer_inner_radius",),
-                    outerRadius=("outer_outer_radius",),
+                    begin_angle=("outer_begin_angle",),
+                    end_angle=("outer_end_angle",),
+                    inner_radius=("outer_inner_radius",),
+                    outer_radius=("outer_outer_radius",),
                 ):
                     CustomButton(
                         text="Select side menu 0",
@@ -224,7 +224,7 @@ class ExampleRadialMenu(TrameApp):
                 v_model_open=("show_rad_menu",),
                 v_model_sidemenuopen=("show_rad_menu_side_menu",),
                 color=("menu_color",),
-                closeMenuButtonRadius=("close_menu_button_radius",),
+                close_menu_button_radius=("close_menu_button_radius",),
             )
 
 
