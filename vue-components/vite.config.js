@@ -1,29 +1,29 @@
-import vue from "@vitejs/plugin-vue";
+import vue from '@vitejs/plugin-vue'
 
 export default {
   plugins: [vue()],
-  base: "./",
+  base: './',
   resolve: {
     alias: {
-      "@": "./src",
+      '@': './src',
     },
   },
   build: {
     lib: {
-      entry: "./src/main.js",
-      name: "trame_radial_menu",
-      formats: ["umd"],
-      fileName: "trame_radial_menu",
+      entry: './src/main.js',
+      name: 'trame_radial_menu',
+      formats: ['umd'],
+      fileName: 'trame_radial_menu',
     },
     rollupOptions: {
-      external: ["vue"],
+      external: ['vue'],
       output: {
         globals: {
-          vue: "Vue",
+          vue: 'Vue',
         },
       },
     },
-    outDir: "../src/trame_radial_menu/module/serve",
-    assetsDir: ".",
+    outDir: '../src/trame_radial_menu/module/serve',
+    assetsDir: '.',
   },
-};
+}

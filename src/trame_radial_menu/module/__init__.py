@@ -1,8 +1,6 @@
 from pathlib import Path
 
-from trame_client.utils.version import get_version
-
-__version__ = get_version("trame-radial-menu")
+from trame_radial_menu import __version__
 
 # Compute local path to serve
 serve_path = str(Path(__file__).with_name("serve").resolve())
