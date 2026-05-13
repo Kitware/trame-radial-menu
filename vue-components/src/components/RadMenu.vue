@@ -43,6 +43,7 @@
             rightMenuOpen = !rightMenuOpen
           },
           'end',
+          'Open right menu',
         ],
         'left-top': [
           leftMenuOpen,
@@ -52,6 +53,7 @@
             leftMenuOpen = !leftMenuOpen
           },
           'start',
+          'Open left menu',
         ],
         'top-left': [
           upMenuOpen,
@@ -61,6 +63,7 @@
             upMenuOpen = !upMenuOpen
           },
           'top',
+          'Open top menu',
         ],
         'bottom-left': [
           downMenuOpen,
@@ -70,6 +73,7 @@
             downMenuOpen = !downMenuOpen
           },
           'bottom',
+          'Open down menu',
         ],
       }"
       :key="placeholderName"
@@ -78,7 +82,7 @@
     >
       <slot :name="placeholderName">
         <tooltip-button
-          text="Open right menu"
+          :text="placeholderProps[5]"
           :location="placeholderProps[4]"
           class="radMenuButton"
           :icon="placeholderProps[0] ? placeholderProps[1] : placeholderProps[2]"

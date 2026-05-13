@@ -1,14 +1,14 @@
-.centerAbs[data-v-be1e63e6] {
+.centerAbs[data-v-57eb2c76] {
   position: absolute;
   transform: translate(-50%, -50%);
 }
-.sideDiv[data-v-be1e63e6] {
+.sideDiv[data-v-57eb2c76] {
   position: absolute;
 }
-.dragZone[data-v-be1e63e6] {
+.dragZone[data-v-57eb2c76] {
   cursor: grab;
 }
-.dragZone[data-v-be1e63e6]:active {
+.dragZone[data-v-57eb2c76]:active {
   cursor: grabbing;
 }
 svg[data-v-de32c22c] {
