@@ -2,69 +2,117 @@
   <div class="centerAbs" v-show="isOpen" :style="positionStyleMain">
     <slot />
     <div :style="positionStyleCenterButton" class="centerAbs">
-      <slot name="central-button">
-        <v-tooltip text="Close menu">
-          <template v-slot:activator="{ props: tooltipActivatorProps }">
-            <v-btn
-              class="radMenuButton"
-              v-bind="tooltipActivatorProps"
-              icon="mdi-close"
-              @click="isOpen = false"
-              variant="flat"
-              :color="color"
-              :size="closeMenuButtonRadius >= 0 ? 2 * closeMenuButtonRadius : 2 * minRadius"
-            />
-          </template>
-        </v-tooltip>
+      <slot name="central">
+        <tooltip-button
+          text="Close menu"
+          class="radMenuButton"
+          icon="mdi-close"
+          @click="isOpen = false"
+          :color="color"
+          :size="closeMenuButtonRadius >= 0 ? 2 * closeMenuButtonRadius : 2 * minRadius"
+        />
       </slot>
     </div>
-    <div v-for="placeholderName in Object.keys(placeholdersPositionStyle)" :key="placeholderName">
-      <div :style="placeholdersPositionStyle[placeholderName]" class="centerAbs">
-        <div v-if="placeholderName != 'right-bottom' && placeholderName != 'bottom-right'">
-          <slot :name="placeholderName" />
-        </div>
-        <div v-else-if="placeholderName == 'bottom-right'">
-          <v-tooltip text="Drag menu">
-            <template v-slot:activator="{ props: tooltipActivatorProps }">
-              <v-btn
-                class="radMenuButton dragZone"
-                v-bind="tooltipActivatorProps"
-                icon="mdi-cursor-move"
-                @mousedown="startDrag"
-                :color="color"
-                variant="flat"
-                size="40"
-              />
-            </template>
-          </v-tooltip>
-        </div>
-        <div v-else-if="placeholderName == 'right-bottom'">
-          <v-tooltip text="Open side menu">
-            <template v-slot:activator="{ props: tooltipActivatorProps }">
-              <v-btn
-                class="radMenuButton"
-                v-bind="tooltipActivatorProps"
-                :active="sideMenuOpen"
-                :icon="sideMenuOpen ? 'mdi-chevron-left' : 'mdi-chevron-right'"
-                @click="sideMenuOpen = !sideMenuOpen"
-                :color="color"
-                variant="flat"
-                size="40"
-              />
-            </template>
-          </v-tooltip>
-        </div>
-      </div>
+    <div
+      v-for="placeholderName in ['left-bottom', 'bottom-right', 'right-bottom']"
+      :key="placeholderName"
+      :style="placeholdersPositionStyle[placeholderName]"
+      class="centerAbs"
+    >
+      <slot :name="placeholderName" />
     </div>
-    <div class="sideDiv" v-show="sideMenuOpen" :style="positionStyleSide">
-      <slot name="side-menu" />
+    <div :style="placeholdersPositionStyle['top-right']" class="centerAbs">
+      <slot name="top-right">
+        <tooltip-button
+          class="radMenuButton dragZone"
+          text="Drag menu"
+          location="top"
+          icon="mdi-cursor-move"
+          @mousedown="startDrag"
+          :color="color"
+        />
+      </slot>
+    </div>
+    <div
+      v-for="(placeholderProps, placeholderName) in {
+        'right-top': [
+          rightMenuOpen,
+          'mdi-chevron-left',
+          'mdi-chevron-right',
+          () => {
+            rightMenuOpen = !rightMenuOpen
+          },
+          'end',
+        ],
+        'left-top': [
+          leftMenuOpen,
+          'mdi-chevron-right',
+          'mdi-chevron-left',
+          () => {
+            leftMenuOpen = !leftMenuOpen
+          },
+          'start',
+        ],
+        'top-left': [
+          upMenuOpen,
+          'mdi-chevron-down',
+          'mdi-chevron-up',
+          () => {
+            upMenuOpen = !upMenuOpen
+          },
+          'top',
+        ],
+        'bottom-left': [
+          downMenuOpen,
+          'mdi-chevron-up',
+          'mdi-chevron-down',
+          () => {
+            downMenuOpen = !downMenuOpen
+          },
+          'bottom',
+        ],
+      }"
+      :key="placeholderName"
+      :style="placeholdersPositionStyle[placeholderName]"
+      class="centerAbs"
+    >
+      <slot :name="placeholderName">
+        <tooltip-button
+          text="Open right menu"
+          :location="placeholderProps[4]"
+          class="radMenuButton"
+          :icon="placeholderProps[0] ? placeholderProps[1] : placeholderProps[2]"
+          :active="placeholderProps[0]"
+          @click="placeholderProps[3]"
+          :color="color"
+        />
+      </slot>
+    </div>
+    <div class="sideDiv" v-show="rightMenuOpen" :style="positionStyleRightMenu">
+      <slot name="right-menu" />
+    </div>
+    <div class="sideDiv" v-show="leftMenuOpen" :style="positionStyleLeftMenu">
+      <slot name="left-menu" />
+    </div>
+    <div class="sideDiv" v-show="upMenuOpen" :style="positionStyleUpMenu">
+      <slot name="up-menu" />
+    </div>
+    <div class="sideDiv" v-show="downMenuOpen" :style="positionStyleDownMenu">
+      <slot name="down-menu" />
     </div>
   </div>
 </template>
 
 <script setup>
 import { provide, ref, computed, defineModel } from 'vue'
-import { boxToStyle, getEightSymmetryPoints, pointToStyle } from '../utils/geometry'
+import TooltipButton from './TooltipButton.vue'
+import {
+  boxToStyle,
+  getEightSymmetryPoints,
+  pointToStyle,
+  pointToStyleTopRight,
+  pointToStyleBottomLeft,
+} from '../utils/geometry'
 import { applyToValues } from '../utils/dicts'
 import { useDraggableContextMenu } from '../composables/useDraggableContextMenu'
 
@@ -75,8 +123,12 @@ defineProps({
   color: { type: String, default: '#77777777' },
 })
 
-const sideMenuOpen = defineModel('sidemenuopen', true)
 const isOpen = defineModel('open', false)
+
+const rightMenuOpen = defineModel('rightmenuopen', false)
+const leftMenuOpen = defineModel('leftmenuopen', false)
+const upMenuOpen = defineModel('upmenuopen', false)
+const downMenuOpen = defineModel('downmenuopen', false)
 
 // Tell children component they are under a RadMenu so RadWheels throw an error
 // if they aren't under a RadMenu
@@ -110,8 +162,11 @@ const positionStyleMain = computed(() => ({
 // position the center button at the center of the menu
 const positionStyleCenterButton = computed(() => pointToStyle([maxRadius.value, maxRadius.value]))
 
-// position the side menu on the right of the menu
-const positionStyleSide = computed(() => pointToStyle([2 * maxRadius.value + 20, 0]))
+// position the side menus
+const positionStyleRightMenu = computed(() => pointToStyle([2 * maxRadius.value + 20, 0]))
+const positionStyleLeftMenu = computed(() => pointToStyleTopRight([2 * maxRadius.value + 20, 0]))
+const positionStyleUpMenu = computed(() => pointToStyleBottomLeft([0, 2 * maxRadius.value + 20]))
+const positionStyleDownMenu = computed(() => pointToStyle([0, 2 * maxRadius.value + 20]))
 
 // Position the 8 small placeholders
 

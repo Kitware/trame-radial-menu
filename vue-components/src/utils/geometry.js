@@ -48,10 +48,9 @@ export function donutSlicePath(cx, cy, r1, r2, start, end, totalSize) {
   ].join(' ')
 }
 
-// There is an affine relation between thisBeginAngle and thisBeginSize and
-// between thisEndAngle and thisEndSize. When thisBeginSize and thisEndSize are
-// between 0 and totalSize, thisBeginAngle and thisEndAngle are between
-// beginAngle and endAngle, we slightly shift so the thisMidAngle is at
+// There is an affine relation between thisBeginAngle and thisBeginSize and between thisEndAngle and
+// thisEndSize. When thisBeginSize and thisEndSize are between 0 and totalSize, thisBeginAngle and
+// thisEndAngle are between beginAngle and endAngle, we slightly shift so the thisMidAngle is at
 // beginAngle when thisBeginSize=0
 export function thisBeginAndEndAnglesFromSizes(
   beginAngle,
@@ -61,17 +60,15 @@ export function thisBeginAndEndAnglesFromSizes(
   thisEndSize,
 ) {
   const totalAngle = endAngle - beginAngle
-  const offset = -totalAngle / (2 * totalSize) // shifted so thisMidAngle is at beginAngle when thisBeginSize=0
-  const thisBeginAngle =
-    beginAngle + offset + (totalAngle / totalSize) * thisBeginSize
-  const thisEndAngle =
-    beginAngle + offset + (totalAngle / totalSize) * thisEndSize
+  // shifted so thisMidAngle is at beginAngle when thisBeginSize=0
+  const offset = -totalAngle / (2 * totalSize)
+  const thisBeginAngle = beginAngle + offset + (totalAngle / totalSize) * thisBeginSize
+  const thisEndAngle = beginAngle + offset + (totalAngle / totalSize) * thisEndSize
   return [thisBeginAngle, thisEndAngle]
 }
 
-// Given a point of coordinates (a, b) in a [-1, 1] coordinate interval, returns
-// the 8 symmetry points by vertical, horizontal, and diagonal axis in a [0, 2*w]
-// coordinate interval
+// Given a point of coordinates (a, b) in a [-1, 1] coordinate interval, returns the 8 symmetry
+// points by vertical, horizontal, and diagonal axis in a [0, 2*w] coordinate interval
 export function getEightSymmetryPoints(a, b, w) {
   return {
     'right-bottom': [w * (1 + a), w * (1 + b)],
@@ -85,10 +82,29 @@ export function getEightSymmetryPoints(a, b, w) {
   }
 }
 
+// Style to anchor a DOM element's top left corner to a point
 export function pointToStyle(point) {
   const [x, y] = point
   return {
     left: `${x}px`,
+    top: `${y}px`,
+  }
+}
+
+// style to anchor a dom element's bottom right corner to a point
+export function pointToStyleBottomLeft(point) {
+  const [x, y] = point
+  return {
+    left: `${x}px`,
+    bottom: `${y}px`,
+  }
+}
+
+// style to anchor a dom element's bottom right corner to a point
+export function pointToStyleTopRight(point) {
+  const [x, y] = point
+  return {
+    right: `${x}px`,
     top: `${y}px`,
   }
 }

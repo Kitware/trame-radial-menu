@@ -5,8 +5,11 @@ from trame.widgets import html
 from .. import module
 
 new_slot_names = [
-    "central-button",
-    "side-menu",
+    "right-menu",
+    "left-menu",
+    "up-menu",
+    "down-menu",
+    "central",
     "right-bottom",
     "bottom-right",
     "bottom-left",

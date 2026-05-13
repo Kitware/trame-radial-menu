@@ -75,13 +75,34 @@ class TrameSlicerRadialMenu(RadMenu):
                     )
 
             # Central placeholder
-            with html.Template(v_slot_central_button="", v_if="close_menu_button"):
+            with html.Template(v_slot_central="", v_if="close_menu_button"):
                 html.P("Middle placeholder")
 
-            # Side menu
+            # Right menu
             with (
-                html.Template(v_slot_side_menu=""),
-                v3.VCard(title="Side Menu", color="#7772", width="200px"),
+                html.Template(v_slot_right_menu=""),
+                v3.VCard(title="Right Menu", color="#7772", width="200px"),
+            ):
+                html.P("Lorem ipsum")
+
+            # Left menu
+            with (
+                html.Template(v_slot_left_menu=""),
+                v3.VCard(title="Left Menu", color="#7772", width="200px"),
+            ):
+                html.P("Lorem ipsum")
+
+            # Up menu
+            with (
+                html.Template(v_slot_up_menu=""),
+                v3.VCard(title="Up Menu", color="#7772", width="200px"),
+            ):
+                html.P("Lorem ipsum")
+
+            # Down menu
+            with (
+                html.Template(v_slot_down_menu=""),
+                v3.VCard(title="Down Menu", color="#7772", width="200px"),
             ):
                 html.P("Lorem ipsum")
 
@@ -146,7 +167,16 @@ class ExampleRadialMenu(TrameApp):
                 v3.VSwitch(v_model=("show_rad_menu", False), label="Open radial menu")
                 v3.VColorPicker(v_model=("menu_color", "#47FF4077"))
                 v3.VSwitch(
-                    v_model=("show_rad_menu_side_menu", False), label="Open side menu"
+                    v_model=("show_rad_menu_right_menu", False), label="Open right menu"
+                )
+                v3.VSwitch(
+                    v_model=("show_rad_menu_left_menu", False), label="Open left menu"
+                )
+                v3.VSwitch(
+                    v_model=("show_rad_menu_up_menu", False), label="Open up menu"
+                )
+                v3.VSwitch(
+                    v_model=("show_rad_menu_down_menu", False), label="Open down menu"
                 )
                 with v3.VCard(title="Inner Wheel", color=("inner_color",)):
                     v3.VSlider(
@@ -228,7 +258,10 @@ class ExampleRadialMenu(TrameApp):
 
             TrameSlicerRadialMenu(
                 v_model_open=("show_rad_menu",),
-                v_model_sidemenuopen=("show_rad_menu_side_menu",),
+                v_model_rightmenuopen=("show_rad_menu_right_menu",),
+                v_model_leftmenuopen=("show_rad_menu_left_menu",),
+                v_model_upmenuopen=("show_rad_menu_up_menu",),
+                v_model_downmenuopen=("show_rad_menu_down_menu",),
                 color=("menu_color",),
                 close_menu_button_radius=("close_menu_button_radius",),
             )
