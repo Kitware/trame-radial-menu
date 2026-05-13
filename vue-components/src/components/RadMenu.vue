@@ -153,6 +153,9 @@ const minRadius = computed(() => Math.min(...radii.value.map((r) => r.value)))
 provide('registerRadius', (radius) => {
   radii.value.push(radius)
 })
+provide('unregisterRadius', (radius) => {
+  radii.value = radii.value.filter((item) => item !== radius)
+})
 provide('maxRadius', maxRadius)
 
 // Position divs

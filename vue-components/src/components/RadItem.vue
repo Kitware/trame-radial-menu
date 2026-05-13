@@ -23,6 +23,9 @@ inject('parentRadWheel', () => {
 
 const sizeRef = computed(() => props.size)
 const beginAndEndAngle = inject('registerSize')(sizeRef)
+onUnmounted(() => {
+  inject('unregisterSize')(sizeRef)
+})
 const [innerRadius, outerRadius] = inject('innerAndOuterRadii')
 const maxRadius = inject('maxRadius')
 
@@ -35,10 +38,6 @@ const center_point = computed(() =>
 )
 
 const positionStyle = computed(() => pointToStyle([center_point.value.x, center_point.value.y]))
-
-onUnmounted(() => {
-  inject('unregisterSize')(sizeRef)
-})
 </script>
 
 <style scoped>

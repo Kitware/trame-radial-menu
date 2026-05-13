@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import { provide, inject, ref, computed } from 'vue'
+import { provide, inject, ref, computed, onUnmounted } from 'vue'
 import { donutSlicePath, thisBeginAndEndAnglesFromSizes } from '../utils/geometry'
 
 // Setup
@@ -50,6 +50,10 @@ provide('innerAndOuterRadii', [innerRadius, outerRadius])
 // Registers radii
 inject('registerRadius')(innerRadius)
 inject('registerRadius')(outerRadius)
+onUnmounted(() => {
+  inject('unregisterRadius')(innerRadius)
+  inject('unregisterRadius')(outerRadius)
+})
 const maxRadius = inject('maxRadius')
 
 // Handle angles and sizes of items
