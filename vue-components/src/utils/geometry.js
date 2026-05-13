@@ -48,23 +48,24 @@ export function donutSlicePath(cx, cy, r1, r2, start, end, totalSize) {
   ].join(' ')
 }
 
-// There is an affine relation between thisBeginAngle and thisBeginSize and between thisEndAngle and
-// thisEndSize. When thisBeginSize and thisEndSize are between 0 and totalSize, thisBeginAngle and
-// thisEndAngle are between beginAngle and endAngle, we slightly shift so the thisMidAngle is at
-// beginAngle when thisBeginSize=0
-export function thisBeginAndEndAnglesFromSizes(
+// There is an affine relation between itemBeginAngle and itemBeginSize and between itemEndAngle and
+// itemEndSize
+// itemBeginSize, itemEndSize in [0, totalSize] =>
+//   itemBeginAngle, itemEndAngle in [beginAngle, endAngle]
+// We slightly shift so that itemBeginSize=0 => itemMidAngle = beginAngle
+export function itemBeginAndEndAnglesFromSizes(
   beginAngle,
   endAngle,
   totalSize,
-  thisBeginSize,
-  thisEndSize,
+  itemBeginSize,
+  itemEndSize,
 ) {
   const totalAngle = endAngle - beginAngle
-  // shifted so thisMidAngle is at beginAngle when thisBeginSize=0
+  // shifted so that itemBeginSize=0 => itemMidAngle = beginAngle
   const offset = -totalAngle / (2 * totalSize)
-  const thisBeginAngle = beginAngle + offset + (totalAngle / totalSize) * thisBeginSize
-  const thisEndAngle = beginAngle + offset + (totalAngle / totalSize) * thisEndSize
-  return [thisBeginAngle, thisEndAngle]
+  const itemBeginAngle = beginAngle + offset + (totalAngle / totalSize) * itemBeginSize
+  const itemEndAngle = beginAngle + offset + (totalAngle / totalSize) * itemEndSize
+  return [itemBeginAngle, itemEndAngle]
 }
 
 // Given a point of coordinates (a, b) in a [-1, 1] coordinate interval, returns the 8 symmetry

@@ -2,14 +2,12 @@
   <svg :width="maxRadius * 2" :height="maxRadius * 2">
     <path :d="donutPath" :fill="props.color" />
   </svg>
-  <div ref="slotElem">
-    <slot />
-  </div>
+  <slot />
 </template>
 
 <script setup>
 import { provide, inject, ref, computed, onUnmounted } from 'vue'
-import { donutSlicePath, thisBeginAndEndAnglesFromSizes } from '../utils/geometry'
+import { donutSlicePath, itemBeginAndEndAnglesFromSizes } from '../utils/geometry'
 
 // Setup
 
@@ -82,7 +80,7 @@ provide('registerSize', (size) => {
   const cumulSizeEnd = computed(() => cumulSizes.value[childId.value + 1])
 
   return computed(() =>
-    thisBeginAndEndAnglesFromSizes(
+    itemBeginAndEndAnglesFromSizes(
       props.beginAngle,
       props.endAngle,
       totalSize.value,

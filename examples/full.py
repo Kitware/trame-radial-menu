@@ -120,25 +120,30 @@ class TrameSlicerRadialMenu(RadMenu):
                 v3.VBtn(icon="mdi-redo", v_bind="props")
 
 
+class SliderWithDefaultValue(v3.VCard):
+    def __init__(
+        self, label: str, state_var_name: str, defaultValue: float = -1.0, **kwargs
+    ):
+        super().__init__()
+        checkbox_state_var_name = "use_" + state_var_name
+        v3.VCheckbox(label="Force " + label, v_model=(checkbox_state_var_name, False))
+        v3.VSlider(
+            v_model=(state_var_name, defaultValue),
+            v_if=(checkbox_state_var_name,),
+            **kwargs,
+        )
+
+        def on_checkbox_change(**kwargs):
+            if not kwargs[checkbox_state_var_name]:
+                self.state[state_var_name] = defaultValue
+
+        self.state.change(checkbox_state_var_name)(on_checkbox_change)
+
+
 class ExampleRadialMenu(TrameApp):
     def __init__(self, server=None):
         super().__init__(server)
         self._build_ui()
-
-    @change("use_close_menu_button_radius")
-    def change_close_menu_button_redius(self, use_close_menu_button_radius, **_):
-        if not (use_close_menu_button_radius):
-            self.state["close_menu_button_radius"] = -1
-
-    @change("use_outer_inner_radius")
-    def change_outer_inner_radius(self, use_outer_inner_radius, **_):
-        if not (use_outer_inner_radius):
-            self.state["outer_inner_radius"] = -1
-
-    @change("use_outer_outer_radius")
-    def change_outer_outer_radius(self, use_outer_outer_radius, **_):
-        if not (use_outer_outer_radius):
-            self.state["outer_outer_radius"] = -1
 
     @change("selected_menu")
     def change_selected_menu(self, selected_menu, **_):
@@ -152,17 +157,12 @@ class ExampleRadialMenu(TrameApp):
                     v_model=("close_menu_button", False),
                     label="Replace central close menu button",
                 )
-                v3.VCheckbox(
-                    label="force central button radius",
-                    v_model=("use_close_menu_button_radius", False),
-                )
-                v3.VSlider(
-                    v_if="use_close_menu_button_radius",
-                    thumb_label="always",
-                    v_model=("close_menu_button_radius", -1.0),
-                    label="inner radius",
+                SliderWithDefaultValue(
+                    label="central button radius",
+                    state_var_name="close_menu_button_radius",
                     min=0,
                     max=360,
+                    thumb_label="always",
                 )
                 v3.VSwitch(v_model=("show_rad_menu", False), label="Open radial menu")
                 v3.VColorPicker(v_model=("menu_color", "#47FF4077"))
@@ -216,27 +216,17 @@ class ExampleRadialMenu(TrameApp):
                         max=4,
                     )
                 with v3.VCard(title="Outer Wheel", color=("outer_color",)):
-                    v3.VCheckbox(
-                        label="force inner radius",
-                        v_model=("use_outer_inner_radius", False),
-                    )
-                    v3.VSlider(
-                        v_if="use_outer_inner_radius",
-                        thumb_label="always",
-                        v_model=("outer_inner_radius", -1.0),
+                    SliderWithDefaultValue(
                         label="inner radius",
+                        state_var_name="outer_inner_radius",
+                        thumb_label="always",
                         min=0,
                         max=360,
                     )
-                    v3.VCheckbox(
-                        label="force outer radius",
-                        v_model=("use_outer_outer_radius", False),
-                    )
-                    v3.VSlider(
-                        v_if="use_outer_outer_radius",
-                        thumb_label="always",
-                        v_model=("outer_outer_radius", -1.0),
+                    SliderWithDefaultValue(
                         label="outer radius",
+                        state_var_name="outer_outer_radius",
+                        thumb_label="always",
                         min=0,
                         max=360,
                     )
