@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "@vue/eslint-config-typescript": "^13.0.0"
+  }
+}

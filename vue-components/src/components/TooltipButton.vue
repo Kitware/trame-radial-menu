@@ -1,14 +1,15 @@
 <template>
   <v-tooltip :text="tooltipText" :location="location">
-    <template v-slot:activator="{ props: tooltipActivatorProps }">
+    <template #activator="{ props: tooltipActivatorProps }">
       <v-btn v-bind="compute_v_bind(tooltipActivatorProps)" :size="size" variant="flat" />
     </template>
   </v-tooltip>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useAttrs } from 'vue'
 
+// Use runtime declaration instead of type-only
 defineProps({
   tooltipText: { type: String, default: '' },
   location: { type: String, default: 'end' },
@@ -17,5 +18,8 @@ defineProps({
 
 const attrs = useAttrs()
 
-const compute_v_bind = (tooltipProps) => ({ ...attrs, ...tooltipProps })
+const compute_v_bind = (tooltipProps: Record<string, unknown>) => ({
+  ...attrs,
+  ...tooltipProps,
+})
 </script>

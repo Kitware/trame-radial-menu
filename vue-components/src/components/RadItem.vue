@@ -3,43 +3,50 @@
     <slot />
   </div>
 </template>
-<script setup>
-import { inject, computed, onUnmounted } from 'vue'
-import { polar } from '@/utils/geometry.js'
-import { pointToStyle } from '../utils/geometry'
+<script setup lang="ts">
+import { inject, computed, onUnmounted, type ComputedRef } from 'vue'
 
-// Setup
+import type { Point, Interval } from '@/utils/types'
+import { polar, pointToStyle } from '../utils/geometry'
 
-const props = defineProps({
-  size: { type: Number, default: 1 },
+interface Props {
+  size: number
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  size: 1,
 })
-
-// Throw an error if not under a RadWheel
-inject('parentRadWheel', () => {
-  throw new Error('RadItem must be under a RadWheel')
-})()
 
 // Registers
 
+const registerSize = inject<(sizeRef: ComputedRef<number>) => ComputedRef<Interval>>('registerSize')
+const unregisterSize = inject<(sizeRef: ComputedRef<number>) => void>('unregisterSize')
+const innerAndOuterRadii = inject<[ComputedRef<number>, ComputedRef<number>]>('innerAndOuterRadii')
+const maxRadius = inject<ComputedRef<number>>('maxRadius')
+if (!registerSize || !unregisterSize || !innerAndOuterRadii || !maxRadius) {
+  throw new Error('RadItem must be under a RadWheel')
+}
 const sizeRef = computed(() => props.size)
-const beginAndEndAngle = inject('registerSize')(sizeRef)
+const beginAndEndAngle = registerSize(sizeRef)
+
 onUnmounted(() => {
-  inject('unregisterSize')(sizeRef)
+  unregisterSize(sizeRef)
 })
-const [innerRadius, outerRadius] = inject('innerAndOuterRadii')
-const maxRadius = inject('maxRadius')
 
-// Calculates angle, radius and position
+// Compute position
 
-const midAngle = computed(() => (beginAndEndAngle.value[0] + beginAndEndAngle.value[1]) / 2)
+const [innerRadius, outerRadius] = innerAndOuterRadii
+const midAngle = computed(() => {
+  const [start, end] = beginAndEndAngle.value
+  return (start + end) / 2
+})
 const midRadius = computed(() => (innerRadius.value + outerRadius.value) / 2)
-const center_point = computed(() =>
-  polar(maxRadius.value, maxRadius.value, midRadius.value, midAngle.value)
+const center_point = computed<Point>(() =>
+  polar(maxRadius.value, maxRadius.value, midRadius.value, midAngle.value),
 )
 
-const positionStyle = computed(() => pointToStyle([center_point.value.x, center_point.value.y]))
+const positionStyle = computed(() => pointToStyle(center_point.value))
 </script>
-
 <style scoped>
 .centerAbs {
   position: absolute;

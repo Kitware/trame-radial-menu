@@ -1,11 +1,23 @@
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, type Ref } from 'vue'
 
-export function useDraggableContextMenu(isOpen) {
+interface DragState {
+  isDragging: boolean
+  startX: number
+  startY: number
+  initialMouseX: number
+  initialMouseY: number
+}
+
+export function useDraggableContextMenu(isOpen: Ref<boolean>): {
+  cx: Ref<number>
+  cy: Ref<number>
+  startDrag: (event: MouseEvent) => void
+} {
   // Current position of the context menu on the page
-  const cx = ref(0)
-  const cy = ref(0)
+  const cx = ref<number>(0)
+  const cy = ref<number>(0)
 
-  let dragState = {
+  let dragState: DragState = {
     isDragging: false,
     startX: 0,
     startY: 0,
@@ -15,7 +27,7 @@ export function useDraggableContextMenu(isOpen) {
 
   // Moves the menu by the delta between the current mouse position
   // and where the drag originally started
-  const onDrag = (event) => {
+  const onDrag = (event: MouseEvent): void => {
     if (!dragState.isDragging) return
 
     const dx = event.pageX - dragState.initialMouseX
@@ -25,13 +37,13 @@ export function useDraggableContextMenu(isOpen) {
     cy.value = dragState.startY + dy
   }
 
-  const stopDrag = () => {
+  const stopDrag = (): void => {
     dragState.isDragging = false
     window.removeEventListener('mousemove', onDrag)
     window.removeEventListener('mouseup', stopDrag)
   }
 
-  const startDrag = (event) => {
+  const startDrag = (event: MouseEvent): void => {
     dragState = {
       isDragging: true,
       startX: cx.value,
@@ -46,7 +58,7 @@ export function useDraggableContextMenu(isOpen) {
   }
 
   // Opens the context menu at the cursor position when the user right-clicks
-  const rightClick = (event) => {
+  const rightClick = (event: MouseEvent): void => {
     event.preventDefault()
     isOpen.value = true
     cx.value = event.pageX

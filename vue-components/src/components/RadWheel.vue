@@ -5,79 +5,94 @@
   <slot />
 </template>
 
-<script setup>
-import { provide, inject, ref, computed, onUnmounted } from 'vue'
+<script setup lang="ts">
+import { provide, inject, ref, computed, onUnmounted, type Ref, type ComputedRef } from 'vue'
+
+import type { Interval } from '@/utils/types'
 import { donutSlicePath, itemBeginAndEndAnglesFromSizes } from '../utils/geometry'
 
 // Setup
 
-const props = defineProps({
-  innerRadius: { type: Number, default: -1 },
-  outerRadius: { type: Number, default: -1 },
-  beginAngle: { type: Number, default: 0 },
-  endAngle: { type: Number, default: 360 },
-  color: { type: String, default: '#7777' },
-})
-
-// Tell children component they are under a RadWheel so RadItems throw an error
-// if they aren't under a RadWheel
-provide('parentRadWheel', () => {})
-
-// Throw an error if not under a RadMenu
-inject('parentRadMenu', () => {
-  throw new Error('RadWheel must be under a RadMenu')
-})()
+const props = withDefaults(
+  defineProps<{
+    innerRadius: number
+    outerRadius: number
+    beginAngle: number
+    endAngle: number
+    color: string
+  }>(),
+  {
+    innerRadius: -1,
+    outerRadius: -1,
+    beginAngle: 0,
+    endAngle: 360,
+    color: '#7777',
+  },
+)
 
 // Handle inner and outer radii
 
-const parentInnerAndOuterRadii = inject('innerAndOuterRadii', null)
-const innerRadius = computed(() => {
+const parentInnerAndOuterRadii = inject<[Ref<number>, Ref<number>] | null>(
+  'innerAndOuterRadii',
+  null,
+)
+
+const innerRadius = computed<number>(() => {
   if (props.innerRadius >= 0) return props.innerRadius
-  else if (parentInnerAndOuterRadii != null)
+  if (parentInnerAndOuterRadii !== null) {
     // inner radius is parent wheel's outer radius when parent wheel exists
     return parentInnerAndOuterRadii[1].value
-  else return 40
+  }
+  return 40
 })
-const outerRadius = computed(() => {
+
+const outerRadius = computed<number>(() => {
   if (props.outerRadius >= 0) return props.outerRadius
-  else return innerRadius.value + 60
+  return innerRadius.value + 60
 })
 
 provide('innerAndOuterRadii', [innerRadius, outerRadius])
 
-// Registers radii
-inject('registerRadius')(innerRadius)
-inject('registerRadius')(outerRadius)
+// Registers
+
+const maxRadius = inject<Ref<number>>('maxRadius')
+const registerRadius = inject<(radius: Ref<number>) => void>('registerRadius')
+const unregisterRadius = inject<(radius: Ref<number>) => void>('unregisterRadius')
+if (!maxRadius || !registerRadius || !unregisterRadius) {
+  throw new Error('RadWheel must be under a RadMenu')
+}
+
+registerRadius(innerRadius)
+registerRadius(outerRadius)
 onUnmounted(() => {
-  inject('unregisterRadius')(innerRadius)
-  inject('unregisterRadius')(outerRadius)
+  unregisterRadius(innerRadius)
+  unregisterRadius(outerRadius)
 })
-const maxRadius = inject('maxRadius')
 
 // Handle angles and sizes of items
 
-// Registered sizes of RadItem children
-const sizes = ref([])
+// sizes of RadItem children
+const sizes = ref<Ref<number>[]>([])
 
 // Reactive cumulated sum of sizes
-const cumulSizes = computed(() => {
-  const cumulSizes = [0]
+const cumulSizes = computed<number[]>(() => {
+  const cumulated: number[] = [0]
   sizes.value.forEach((element) => {
-    cumulSizes.push(cumulSizes.at(-1) + element.value)
+    cumulated.push(cumulated[cumulated.length - 1]! + element.value)
   })
-  return cumulSizes
+  return cumulated
 })
 
 // Reactive sum of all sizes
-const totalSize = computed(() => cumulSizes.value.at(-1))
+const totalSize = computed<number>(() => cumulSizes.value[cumulSizes.value.length - 1] || 0)
 
-// When a children registers its size, it gets a ref of its computed begin and
-// end angles
-provide('registerSize', (size) => {
+// When a child registers its size, it gets a ref of its computed begin and end angles
+provide('registerSize', (size: Ref<number>): ComputedRef<Interval> => {
   sizes.value.push(size)
+
   const childId = computed(() => sizes.value.findIndex((elem) => elem === size))
-  const cumulSizeBegin = computed(() => cumulSizes.value[childId.value])
-  const cumulSizeEnd = computed(() => cumulSizes.value[childId.value + 1])
+  const cumulSizeBegin = computed(() => cumulSizes.value[childId.value]!)
+  const cumulSizeEnd = computed(() => cumulSizes.value[childId.value + 1]!)
 
   return computed(() =>
     itemBeginAndEndAnglesFromSizes(
@@ -85,27 +100,29 @@ provide('registerSize', (size) => {
       props.endAngle,
       totalSize.value,
       cumulSizeBegin.value,
-      cumulSizeEnd.value
-    )
+      cumulSizeEnd.value,
+    ),
   )
 })
 
-provide('unregisterSize', (size) => {
+provide('unregisterSize', (size: Ref<number>) => {
   sizes.value = sizes.value.filter((item) => item !== size)
 })
 
-// Draw the donut
-const donutPath = computed(() =>
-  donutSlicePath(
+// Draw the donut slice
+const donutPath = computed<string>(() => {
+  if (!maxRadius) return ''
+
+  return donutSlicePath(
     maxRadius.value,
     maxRadius.value,
     innerRadius.value,
     outerRadius.value,
     props.beginAngle,
     props.endAngle,
-    totalSize.value
+    totalSize.value,
   )
-)
+})
 </script>
 
 <style scoped>

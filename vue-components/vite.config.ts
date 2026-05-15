@@ -1,13 +1,10 @@
+import { fileURLToPath, URL } from 'node:url'
+
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-export default {
-  plugins: [vue()],
-  base: './',
-  resolve: {
-    alias: {
-      '@': './src',
-    },
-  },
+// https://vitejs.dev/config/
+export default defineConfig({
   build: {
     lib: {
       entry: './src/main.js',
@@ -26,4 +23,10 @@ export default {
     outDir: '../src/trame_radial_menu/module/serve',
     assetsDir: '.',
   },
-}
+  plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
+})

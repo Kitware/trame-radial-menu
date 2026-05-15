@@ -1,12 +1,19 @@
-export function polar(cx, cy, r, angle) {
-  const rad = ((angle - 90) * Math.PI) / 180 // angle 0 is up
-  return {
-    x: cx + r * Math.cos(rad),
-    y: cy + r * Math.sin(rad),
-  }
+import type { Point, EightSymmetryPoints, Interval, Box } from './types'
+
+export function polar(cx: number, cy: number, r: number, angle: number): Point {
+  const rad: number = ((angle - 90) * Math.PI) / 180 // angle 0 is up
+  return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)]
 }
 
-export function donutSlicePath(cx, cy, r1, r2, start, end, totalSize) {
+export function donutSlicePath(
+  cx: number,
+  cy: number,
+  r1: number,
+  r2: number,
+  start: number,
+  end: number,
+  totalSize: number,
+): string {
   // Offset so the middle of the slice of the first item is at angle start
   const offset = (end - start) / (2 * totalSize)
   start = start - offset
@@ -22,13 +29,13 @@ export function donutSlicePath(cx, cy, r1, r2, start, end, totalSize) {
     const i1 = polar(cx, cy, r2, start)
     const i2 = polar(cx, cy, r2, start + 180)
     return [
-      `M ${o1.x} ${o1.y}`,
-      `A ${r1} ${r1} 0 1 1 ${o2.x} ${o2.y}`,
-      `A ${r1} ${r1} 0 1 1 ${o1.x} ${o1.y}`,
+      `M ${o1[0]} ${o1[1]}`,
+      `A ${r1} ${r1} 0 1 1 ${o2[0]} ${o2[1]}`,
+      `A ${r1} ${r1} 0 1 1 ${o1[0]} ${o1[1]}`,
       `Z`,
-      `M ${i1.x} ${i1.y}`,
-      `A ${r2} ${r2} 0 1 0 ${i2.x} ${i2.y}`,
-      `A ${r2} ${r2} 0 1 0 ${i1.x} ${i1.y}`,
+      `M ${i1[0]} ${i1[1]}`,
+      `A ${r2} ${r2} 0 1 0 ${i2[0]} ${i2[1]}`,
+      `A ${r2} ${r2} 0 1 0 ${i1[0]} ${i1[1]}`,
       `Z`,
     ].join(' ')
   }
@@ -40,10 +47,10 @@ export function donutSlicePath(cx, cy, r1, r2, start, end, totalSize) {
   const large = end - start > 180 ? 1 : 0
 
   return [
-    `M ${outerStart.x} ${outerStart.y}`,
-    `A ${r1} ${r1} 0 ${large} 1 ${outerEnd.x} ${outerEnd.y}`,
-    `L ${innerEnd.x} ${innerEnd.y}`,
-    `A ${r2} ${r2} 0 ${large} 0 ${innerStart.x} ${innerStart.y}`,
+    `M ${outerStart[0]} ${outerStart[1]}`,
+    `A ${r1} ${r1} 0 ${large} 1 ${outerEnd[0]} ${outerEnd[1]}`,
+    `L ${innerEnd[0]} ${innerEnd[1]}`,
+    `A ${r2} ${r2} 0 ${large} 0 ${innerStart[0]} ${innerStart[1]}`,
     `Z`,
   ].join(' ')
 }
@@ -52,25 +59,25 @@ export function donutSlicePath(cx, cy, r1, r2, start, end, totalSize) {
 // itemEndSize
 // itemBeginSize, itemEndSize in [0, totalSize] =>
 //   itemBeginAngle, itemEndAngle in [beginAngle, endAngle]
-// We slightly shift so that itemBeginSize=0 => itemMidAngle = beginAngle
+// We slightly shift so that itemBeginSize = 0 => itemMidAngle = beginAngle
 export function itemBeginAndEndAnglesFromSizes(
-  beginAngle,
-  endAngle,
-  totalSize,
-  itemBeginSize,
-  itemEndSize,
-) {
-  const totalAngle = endAngle - beginAngle
-  // shifted so that itemBeginSize=0 => itemMidAngle = beginAngle
-  const offset = -totalAngle / (2 * totalSize)
-  const itemBeginAngle = beginAngle + offset + (totalAngle / totalSize) * itemBeginSize
-  const itemEndAngle = beginAngle + offset + (totalAngle / totalSize) * itemEndSize
+  beginAngle: number,
+  endAngle: number,
+  totalSize: number,
+  itemBeginSize: number,
+  itemEndSize: number,
+): Interval {
+  const totalAngle: number = endAngle - beginAngle
+  // shifted so that itemBeginSize = 0 => itemMidAngle = beginAngle
+  const offset: number = -totalAngle / (2 * totalSize)
+  const itemBeginAngle: number = beginAngle + offset + (totalAngle / totalSize) * itemBeginSize
+  const itemEndAngle: number = beginAngle + offset + (totalAngle / totalSize) * itemEndSize
   return [itemBeginAngle, itemEndAngle]
 }
 
 // Given a point of coordinates (a, b) in a [-1, 1] coordinate interval, returns the 8 symmetry
 // points by vertical, horizontal, and diagonal axis in a [0, 2*w] coordinate interval
-export function getEightSymmetryPoints(a, b, w) {
+export function getEightSymmetryPoints(a: number, b: number, w: number): EightSymmetryPoints {
   return {
     'right-bottom': [w * (1 + a), w * (1 + b)],
     'bottom-right': [w * (1 + b), w * (1 + a)],
@@ -84,7 +91,7 @@ export function getEightSymmetryPoints(a, b, w) {
 }
 
 // Style to anchor a DOM element's top left corner to a point
-export function pointToStyle(point) {
+export function pointToStyle(point: Point): { left: string; top: string } {
   const [x, y] = point
   return {
     left: `${x}px`,
@@ -93,7 +100,7 @@ export function pointToStyle(point) {
 }
 
 // style to anchor a dom element's bottom right corner to a point
-export function pointToStyleBottomLeft(point) {
+export function pointToStyleBottomLeft(point: Point): { left: string; bottom: string } {
   const [x, y] = point
   return {
     left: `${x}px`,
@@ -102,7 +109,7 @@ export function pointToStyleBottomLeft(point) {
 }
 
 // style to anchor a dom element's bottom right corner to a point
-export function pointToStyleTopRight(point) {
+export function pointToStyleTopRight(point: Point): { right: string; top: string } {
   const [x, y] = point
   return {
     right: `${x}px`,
@@ -110,7 +117,8 @@ export function pointToStyleTopRight(point) {
   }
 }
 
-export function boxToStyle(w, h) {
+export function boxToStyle(box: Box): { width: string; height: string } {
+  const [w, h] = box
   return {
     width: `${w}px`,
     height: `${h}px`,

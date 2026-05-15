@@ -14,80 +14,29 @@
       </slot>
     </div>
     <div
-      v-for="placeholderName in ['left-bottom', 'bottom-right', 'right-bottom']"
-      :key="placeholderName"
-      :style="placeholdersPositionStyle[placeholderName]"
-      class="centerAbs"
-    >
-      <slot :name="placeholderName" />
-    </div>
-    <div :style="placeholdersPositionStyle['top-right']" class="centerAbs">
-      <slot name="top-right">
-        <tooltip-button
-          class="radMenuButton dragZone"
-          text="Drag menu"
-          location="top"
-          icon="mdi-cursor-move"
-          @mousedown="startDrag"
-          :color="color"
-        />
-      </slot>
-    </div>
-    <div
-      v-for="(placeholderProps, placeholderName) in {
-        'right-top': [
-          rightMenuOpen,
-          'mdi-chevron-left',
-          'mdi-chevron-right',
-          () => {
-            rightMenuOpen = !rightMenuOpen
-          },
-          'end',
-          'Open right menu',
-        ],
-        'left-top': [
-          leftMenuOpen,
-          'mdi-chevron-right',
-          'mdi-chevron-left',
-          () => {
-            leftMenuOpen = !leftMenuOpen
-          },
-          'start',
-          'Open left menu',
-        ],
-        'top-left': [
-          upMenuOpen,
-          'mdi-chevron-down',
-          'mdi-chevron-up',
-          () => {
-            upMenuOpen = !upMenuOpen
-          },
-          'top',
-          'Open top menu',
-        ],
-        'bottom-left': [
-          downMenuOpen,
-          'mdi-chevron-up',
-          'mdi-chevron-down',
-          () => {
-            downMenuOpen = !downMenuOpen
-          },
-          'bottom',
-          'Open down menu',
-        ],
-      }"
+      v-for="placeholderName in Object.keys(placeholdersPositionStyle)"
       :key="placeholderName"
       :style="placeholdersPositionStyle[placeholderName]"
       class="centerAbs"
     >
       <slot :name="placeholderName">
         <tooltip-button
-          :text="placeholderProps[5]"
-          :location="placeholderProps[4]"
+          v-if="placeholderName == 'right-top'"
+          text="Open side menu"
+          location="end"
           class="radMenuButton"
-          :icon="placeholderProps[0] ? placeholderProps[1] : placeholderProps[2]"
-          :active="placeholderProps[0]"
-          @click="placeholderProps[3]"
+          :icon="rightMenuOpen ? 'mdi-chevron-left' : 'mdi-chevron-right'"
+          :active="rightMenuOpen"
+          @click="rightMenuOpen = !rightMenuOpen"
+          :color="color"
+        />
+        <tooltip-button
+          v-if="placeholderName == 'top-right'"
+          class="radMenuButton dragZone"
+          text="Drag menu"
+          location="top"
+          icon="mdi-cursor-move"
+          @mousedown="startDrag"
           :color="color"
         />
       </slot>
@@ -107,8 +56,10 @@
   </div>
 </template>
 
-<script setup>
-import { provide, ref, computed, defineModel } from 'vue'
+<script setup lang="ts">
+import { provide, ref, computed, type ComputedRef } from 'vue'
+
+import type { EightSymmetryPoints } from '@/utils/types'
 import TooltipButton from './TooltipButton.vue'
 import {
   boxToStyle,
@@ -122,18 +73,22 @@ import { useDraggableContextMenu } from '../composables/useDraggableContextMenu'
 
 // Setup
 
-defineProps({
-  closeMenuButtonRadius: { type: Number, default: -1 },
-  color: { type: String, default: '#77777777' },
-})
+withDefaults(
+  defineProps<{
+    closeMenuButtonRadius: number
+    color: string
+  }>(),
+  {
+    closeMenuButtonRadius: -1,
+    color: '#7777',
+  },
+)
+const isOpen = defineModel<boolean>('open', { default: false })
 
-const isOpen = defineModel('open', false)
-
-const rightMenuOpen = defineModel('rightmenuopen', false)
-const leftMenuOpen = defineModel('leftmenuopen', false)
-const upMenuOpen = defineModel('upmenuopen', false)
-const downMenuOpen = defineModel('downmenuopen', false)
-
+const rightMenuOpen = defineModel('rightmenuopen', { default: false })
+const leftMenuOpen = defineModel('leftmenuopen', { default: false })
+const upMenuOpen = defineModel('upmenuopen', { default: false })
+const downMenuOpen = defineModel('downmenuopen', { default: false })
 // Tell children component they are under a RadMenu so RadWheels throw an error
 // if they aren't under a RadMenu
 provide('parentRadMenu', () => {})
@@ -145,15 +100,15 @@ const { cx, cy, startDrag } = useDraggableContextMenu(isOpen)
 // Handle maximum radius and tells it to children components
 
 // radii of all children
-const radii = ref([])
+const radii = ref<ComputedRef<number>[]>([])
 
 const maxRadius = computed(() => Math.max(...radii.value.map((r) => r.value)))
 const minRadius = computed(() => Math.min(...radii.value.map((r) => r.value)))
 
-provide('registerRadius', (radius) => {
+provide('registerRadius', (radius: ComputedRef<number>) => {
   radii.value.push(radius)
 })
-provide('unregisterRadius', (radius) => {
+provide('unregisterRadius', (radius: ComputedRef<number>) => {
   radii.value = radii.value.filter((item) => item !== radius)
 })
 provide('maxRadius', maxRadius)
@@ -162,7 +117,7 @@ provide('maxRadius', maxRadius)
 
 // position the menu in the page at (cx, cy)
 const positionStyleMain = computed(() => ({
-  ...boxToStyle(maxRadius.value * 2, maxRadius.value * 2),
+  ...boxToStyle([maxRadius.value * 2, maxRadius.value * 2]),
   ...pointToStyle([cx.value, cy.value]),
 }))
 
@@ -183,10 +138,12 @@ const a = 0.95
 const b = 0.65
 
 // placeholders position is in [0, maxRadius] coordinate interval
-const placeholdersPosition = computed(() => getEightSymmetryPoints(a, b, maxRadius.value))
+const placeholdersPosition = computed<EightSymmetryPoints>(() =>
+  getEightSymmetryPoints(a, b, maxRadius.value),
+)
 // Get the corresponding CSS style
 const placeholdersPositionStyle = computed(() =>
-  applyToValues(placeholdersPosition.value, pointToStyle)
+  applyToValues(placeholdersPosition.value, pointToStyle),
 )
 </script>
 

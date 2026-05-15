@@ -13,8 +13,8 @@ serve = {serve_directory: serve_path}
 scripts = [serve_directory + "/trame_radial_menu.umd.js"]
 
 # List of CSS files to load (usually from the serve path above)
-if (Path(serve_path) / "style.css").exists():
-    styles = [serve_directory + "/style.css"]
+if (Path(serve_path) / "trame_radial_menu.css").exists():
+    styles = [serve_directory + "/trame_radial_menu.css"]
 
 # List of Vue plugins to install/load
 vue_use = ["trame_radial_menu"]
