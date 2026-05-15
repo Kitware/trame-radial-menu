@@ -1,14 +1,14 @@
-.centerAbs[data-v-afe42eac] {
+.centerAbs[data-v-9f3fcdb3] {
   position: absolute;
   transform: translate(-50%, -50%);
 }
-.sideDiv[data-v-afe42eac] {
+.sideDiv[data-v-9f3fcdb3] {
   position: absolute;
 }
-.dragZone[data-v-afe42eac] {
+.dragZone[data-v-9f3fcdb3] {
   cursor: grab;
 }
-.dragZone[data-v-afe42eac]:active {
+.dragZone[data-v-9f3fcdb3]:active {
   cursor: grabbing;
 }
 svg[data-v-7fa71486] {

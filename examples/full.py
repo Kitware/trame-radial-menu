@@ -166,6 +166,22 @@ class ExampleRadialMenu(TrameApp):
                 )
                 v3.VSwitch(v_model=("show_rad_menu", False), label="Open radial menu")
                 v3.VColorPicker(v_model=("menu_color", "#47FF4077"))
+                v3.VSelect(
+                    label="Drag button position",
+                    items=(
+                        [
+                            "top-right",
+                            "right-top",
+                            "right-bottom",
+                            "bottom-right",
+                            "bottom-left",
+                            "left-bottom",
+                            "left-top",
+                            "top-left",
+                        ],
+                    ),
+                    v_model=("drag_position", "top-left"),
+                )
                 v3.VSwitch(
                     v_model=("show_rad_menu_right_menu", False), label="Open right menu"
                 )
@@ -252,8 +268,9 @@ class ExampleRadialMenu(TrameApp):
                 v_model_leftmenuopen=("show_rad_menu_left_menu",),
                 v_model_upmenuopen=("show_rad_menu_up_menu",),
                 v_model_downmenuopen=("show_rad_menu_down_menu",),
-                color=("menu_color",),
                 close_menu_button_radius=("close_menu_button_radius",),
+                color=("menu_color",),
+                drag_position=("drag_position",),
             )
 
 

@@ -45,6 +45,7 @@ class RadMenu(HtmlElement):
         self._attr_names += [
             ("close_menu_button_radius", "closeMenuButtonRadius"),
             "color",
+            ("drag_position", "dragPosition"),
         ]
 
 

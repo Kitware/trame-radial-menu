@@ -21,22 +21,22 @@
     >
       <slot :name="placeholderName">
         <tooltip-button
-          v-if="placeholderName == 'right-top'"
+          v-if="placeholderName == props.dragPosition"
+          class="radMenuButton dragZone"
+          text="Drag menu"
+          location="top"
+          icon="mdi-cursor-move"
+          @mousedown="startDrag"
+          :color="color"
+        />
+        <tooltip-button
+          v-else-if="placeholderName == 'right-top'"
           text="Open side menu"
           location="end"
           class="radMenuButton"
           :icon="rightMenuOpen ? 'mdi-chevron-left' : 'mdi-chevron-right'"
           :active="rightMenuOpen"
           @click="rightMenuOpen = !rightMenuOpen"
-          :color="color"
-        />
-        <tooltip-button
-          v-if="placeholderName == 'top-right'"
-          class="radMenuButton dragZone"
-          text="Drag menu"
-          location="top"
-          icon="mdi-cursor-move"
-          @mousedown="startDrag"
           :color="color"
         />
       </slot>
@@ -73,25 +73,24 @@ import { useDraggableContextMenu } from '../composables/useDraggableContextMenu'
 
 // Setup
 
-withDefaults(
-  defineProps<{
-    closeMenuButtonRadius: number
-    color: string
-  }>(),
-  {
-    closeMenuButtonRadius: -1,
-    color: '#7777',
-  },
-)
+interface Props {
+  closeMenuButtonRadius: number
+  color: string
+  dragPosition: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  closeMenuButtonRadius: -1,
+  color: '#7777',
+  dragPosition: 'top-right',
+})
+
 const isOpen = defineModel<boolean>('open', { default: false })
 
 const rightMenuOpen = defineModel('rightmenuopen', { default: false })
 const leftMenuOpen = defineModel('leftmenuopen', { default: false })
 const upMenuOpen = defineModel('upmenuopen', { default: false })
 const downMenuOpen = defineModel('downmenuopen', { default: false })
-// Tell children component they are under a RadMenu so RadWheels throw an error
-// if they aren't under a RadMenu
-provide('parentRadMenu', () => {})
 
 // Use composable that handles open on right click and drag when startDrag is
 // called
