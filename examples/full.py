@@ -273,10 +273,12 @@ class ExampleRadialMenu(TrameApp):
                             max=360,
                         )
             with v3.VCol(
-                style="position: relative; margin-top: 100px; margin-bottom: 100px; margin-right: 100px; background-color: rgba(0,255,255,0.2);",
+                classes="pa-0 ma-16",
+                style="position: relative; background-color: rgba(0,255,255,0.2);",
                 cols=(7,),
             ):
                 html.H1("Container div")
+                v3.VDivider()
                 TrameSlicerRadialMenu(
                     v_model_open=("show_rad_menu",),
                     v_model_rightmenuopen=("show_rad_menu_right_menu",),
@@ -287,7 +289,6 @@ class ExampleRadialMenu(TrameApp):
                     color=("menu_color",),
                     drag_position=("drag_position",),
                 )
-            # v3.VCol(cols=(1, ), md=(9, ))
 
 
 def main():

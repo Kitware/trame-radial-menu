@@ -1,5 +1,5 @@
 <template>
-  <svg :width="maxRadius * 2" :height="maxRadius * 2" class="hasbbox">
+  <svg :width="maxRadius * 2" :height="maxRadius * 2">
     <path :d="donutPath" :fill="props.color" />
   </svg>
   <slot />

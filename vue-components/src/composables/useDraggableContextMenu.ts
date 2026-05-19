@@ -12,8 +12,7 @@ import type { BBox, Point } from '@/utils/types'
 interface DragState {
   isDragging: boolean
   startPos: Point
-  initialMouseX: number
-  initialMouseY: number
+  initialMouse: Point
 }
 
 export function useDraggableContextMenu(
@@ -34,13 +33,6 @@ export function useDraggableContextMenu(
 
   const centerPos = computed(() => clampPosition(clickPos.value))
 
-  let dragState: DragState = {
-    isDragging: false,
-    startPos: [0, 0],
-    initialMouseX: 0,
-    initialMouseY: 0,
-  }
-
   // Clamp a position so the BBox around children elements fits in containerDiv
   const clampPosition = (newPos: Point): Point => {
     if (!containerDiv.value) {
@@ -57,13 +49,22 @@ export function useDraggableContextMenu(
     if (bboxes.length == 0) return newPos
 
     const bbox = bboxes.reduce(bBoxUnion)
-    const minX = centerPos.value[0] - bbox.left
-    const minY = centerPos.value[1] - bbox.top
-    const maxX = BBoxWidth(containerRect.value) - (bbox.right - centerPos.value[0])
-    const maxY = BBoxHeight(containerRect.value) - (bbox.bottom - centerPos.value[1])
+    const upperLeftX = centerPos.value[0] - bbox.left
+    const upperLeftY = centerPos.value[1] - bbox.top
+    const lowerRightX = BBoxWidth(containerRect.value) - (bbox.right - centerPos.value[0])
+    const lowerRightY = BBoxHeight(containerRect.value) - (bbox.bottom - centerPos.value[1])
 
     const [newX, newY] = newPos
-    return [Math.min(maxX, Math.max(minX, newX)), Math.min(maxY, Math.max(minY, newY))]
+    return [
+      Math.min(lowerRightX, Math.max(upperLeftX, newX)),
+      Math.min(lowerRightY, Math.max(upperLeftY, newY)),
+    ]
+  }
+
+  let dragState: DragState = {
+    isDragging: false,
+    startPos: [0, 0],
+    initialMouse: [0, 0],
   }
 
   // Moves the menu by the delta between the current mouse position and where the drag originally
@@ -71,8 +72,8 @@ export function useDraggableContextMenu(
   const onDrag = (event: MouseEvent): void => {
     if (!dragState.isDragging) return
 
-    const dx = event.pageX - dragState.initialMouseX
-    const dy = event.pageY - dragState.initialMouseY
+    const dx = event.pageX - dragState.initialMouse[0]
+    const dy = event.pageY - dragState.initialMouse[1]
 
     clickPos.value = [dragState.startPos[0] + dx, dragState.startPos[1] + dy]
   }
@@ -87,8 +88,7 @@ export function useDraggableContextMenu(
     dragState = {
       isDragging: true,
       startPos: centerPos.value,
-      initialMouseX: event.pageX,
-      initialMouseY: event.pageY,
+      initialMouse: [event.pageX, event.pageY],
     }
 
     window.addEventListener('mousemove', onDrag)
@@ -100,7 +100,6 @@ export function useDraggableContextMenu(
   const rightClick = (event: MouseEvent): void => {
     event.preventDefault()
     isOpen.value = true
-    console.log(event.pageX - containerRect.value.left, event.pageY - containerRect.value.top)
     clickPos.value = [event.pageX - containerRect.value.left, event.pageY - containerRect.value.top]
   }
 

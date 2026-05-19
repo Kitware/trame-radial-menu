@@ -4,7 +4,7 @@ export type Interval = [number, number]
 
 export type Box = [number, number]
 
-export type EightSymmetryPoints = {
+export interface EightSymmetryPoints {
   'right-bottom': Point
   'bottom-right': Point
   'bottom-left': Point
@@ -15,7 +15,7 @@ export type EightSymmetryPoints = {
   'right-top': Point
 }
 
-export type BBox = {
+export interface BBox {
   top: number
   left: number
   bottom: number

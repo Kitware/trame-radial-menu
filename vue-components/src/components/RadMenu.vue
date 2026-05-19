@@ -1,12 +1,12 @@
 <template>
-  <div ref="outerDiv" class="fullSize" >
+  <div ref="outerDiv" class="fullSize">
     <div ref="innerDiv" class="centerAbs" v-show="isOpen" :style="positionStyleMain">
       <slot />
       <div :style="positionStyleCenterButton" class="centerAbs">
         <slot name="central">
           <tooltip-button
             text="Close menu"
-            class="radMenuButton hasbbox"
+            class="radMenuButton"
             icon="mdi-close"
             @click="isOpen = false"
             :color="color"
@@ -23,7 +23,7 @@
         <slot :name="placeholderName">
           <tooltip-button
             v-if="placeholderName == props.dragPosition"
-            class="radMenuButton dragZone hasbbox"
+            class="radMenuButton dragZone"
             text="Drag menu"
             location="top"
             icon="mdi-cursor-move"
@@ -34,7 +34,7 @@
             v-else-if="placeholderName == 'right-top'"
             :text="rightMenuOpen ? 'Close right menu' : 'Open right menu'"
             location="end"
-            class="radMenuButton hasbbox"
+            class="radMenuButton"
             :icon="rightMenuOpen ? 'mdi-chevron-left' : 'mdi-chevron-right'"
             :active="rightMenuOpen"
             @click="rightMenuOpen = !rightMenuOpen"
@@ -42,16 +42,16 @@
           />
         </slot>
       </div>
-      <div class="sideDiv hasbbox" v-show="rightMenuOpen" :style="positionStyleRightMenu">
+      <div class="sideDiv" v-show="rightMenuOpen" :style="positionStyleRightMenu">
         <slot name="right-menu" />
       </div>
-      <div class="sideDiv hasbbox" v-show="leftMenuOpen" :style="positionStyleLeftMenu">
+      <div class="sideDiv" v-show="leftMenuOpen" :style="positionStyleLeftMenu">
         <slot name="left-menu" />
       </div>
-      <div class="sideDiv hasbbox" v-show="upMenuOpen" :style="positionStyleUpMenu">
+      <div class="sideDiv" v-show="upMenuOpen" :style="positionStyleUpMenu">
         <slot name="up-menu" />
       </div>
-      <div class="sideDiv hasbbox" v-show="downMenuOpen" :style="positionStyleDownMenu">
+      <div class="sideDiv" v-show="downMenuOpen" :style="positionStyleDownMenu">
         <slot name="down-menu" />
       </div>
     </div>
@@ -89,10 +89,10 @@ const props = withDefaults(defineProps<Props>(), {
 
 const isOpen = defineModel<boolean>('open', { default: false })
 
-const rightMenuOpen = defineModel('rightmenuopen', { default: false })
-const leftMenuOpen = defineModel('leftmenuopen', { default: false })
-const upMenuOpen = defineModel('upmenuopen', { default: false })
-const downMenuOpen = defineModel('downmenuopen', { default: false })
+const rightMenuOpen = defineModel<boolean>('rightmenuopen', { default: false })
+const leftMenuOpen = defineModel<boolean>('leftmenuopen', { default: false })
+const upMenuOpen = defineModel<boolean>('upmenuopen', { default: false })
+const downMenuOpen = defineModel<boolean>('downmenuopen', { default: false })
 
 // Use composable that handles open on right click and drag when startDrag is
 // called

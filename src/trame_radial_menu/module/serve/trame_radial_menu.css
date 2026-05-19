@@ -1,28 +1,28 @@
-.centerAbs[data-v-1b778cf9] {
+.centerAbs[data-v-75db5b95] {
   position: absolute;
   transform: translate(-50%, -50%);
   pointer-events: auto;
 }
-.fullSize[data-v-1b778cf9] {
+.fullSize[data-v-75db5b95] {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
-.sideDiv[data-v-1b778cf9] {
+.sideDiv[data-v-75db5b95] {
   position: absolute;
 }
-.dragZone[data-v-1b778cf9] {
+.dragZone[data-v-75db5b95] {
   cursor: grab;
 }
-.dragZone[data-v-1b778cf9]:active {
+.dragZone[data-v-75db5b95]:active {
   cursor: grabbing;
 }
-svg[data-v-f5ad250d] {
+svg[data-v-7fa71486] {
   pointer-events: none;
   position: absolute;
   transform: "translate(-50%, -50%)";
 }
-.centerAbs[data-v-676e0aaa] {
+.centerAbs[data-v-0bbc07a8] {
   position: absolute;
   transform: translate(-50%, -50%);
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="centerAbs hasbbox" :style="positionStyle">
+  <div class="centerAbs" :style="positionStyle">
     <slot />
   </div>
 </template>
@@ -41,11 +41,11 @@ const midAngle = computed(() => {
   return (start + end) / 2
 })
 const midRadius = computed(() => (innerRadius.value + outerRadius.value) / 2)
-const center_point = computed<Point>(() =>
+const centerPoint = computed<Point>(() =>
   polar(maxRadius.value, maxRadius.value, midRadius.value, midAngle.value),
 )
 
-const positionStyle = computed(() => pointToStyle(center_point.value))
+const positionStyle = computed(() => pointToStyle(centerPoint.value))
 </script>
 <style scoped>
 .centerAbs {
