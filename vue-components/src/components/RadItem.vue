@@ -1,5 +1,5 @@
 <template>
-  <div class="centerAbs" :style="positionStyle">
+  <div class="centerAbs hasbbox" :style="positionStyle">
     <slot />
   </div>
 </template>

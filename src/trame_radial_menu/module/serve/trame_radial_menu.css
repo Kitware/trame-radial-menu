@@ -1,22 +1,28 @@
-.centerAbs[data-v-9f3fcdb3] {
+.centerAbs[data-v-1b778cf9] {
   position: absolute;
   transform: translate(-50%, -50%);
+  pointer-events: auto;
 }
-.sideDiv[data-v-9f3fcdb3] {
+.fullSize[data-v-1b778cf9] {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.sideDiv[data-v-1b778cf9] {
   position: absolute;
 }
-.dragZone[data-v-9f3fcdb3] {
+.dragZone[data-v-1b778cf9] {
   cursor: grab;
 }
-.dragZone[data-v-9f3fcdb3]:active {
+.dragZone[data-v-1b778cf9]:active {
   cursor: grabbing;
 }
-svg[data-v-7fa71486] {
+svg[data-v-f5ad250d] {
   pointer-events: none;
   position: absolute;
   transform: "translate(-50%, -50%)";
 }
-.centerAbs[data-v-f86bf57d] {
+.centerAbs[data-v-676e0aaa] {
   position: absolute;
   transform: translate(-50%, -50%);
 }

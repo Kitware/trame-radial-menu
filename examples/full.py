@@ -11,7 +11,7 @@ class CustomButtonRadItem(RadItem):
     def __init__(self, text: str, icon: str, click=lambda: None, **kwargs):
         super().__init__(**kwargs)
         with self, v3.VTooltip(text=text), html.Template(v_slot_activator="{ props }"):
-            v3.VBtn(icon=icon, click=click, v_bind="props")
+            v3.VBtn(icon=icon, click=click, v_bind="props", classes="hasbbox")
 
 
 class TrameSlicerRadialMenu(RadMenu):
@@ -150,128 +150,144 @@ class ExampleRadialMenu(TrameApp):
         print(f"Menu {selected_menu} selected !")  # noqa: T201
 
     def _build_ui(self):
-        with VAppLayout(self.server) as self.ui, self.ui.root:
-            html.H1("Right click to open the radial menu")
-            with v3.VCard(width="500px", color="#eeee"):
-                v3.VSwitch(
-                    v_model=("close_menu_button", False),
-                    label="Replace central close menu button",
-                )
-                SliderWithDefaultValue(
-                    label="central button radius",
-                    state_var_name="close_menu_button_radius",
-                    min=0,
-                    max=360,
-                    thumb_label="always",
-                )
-                v3.VSwitch(v_model=("show_rad_menu", False), label="Open radial menu")
-                v3.VColorPicker(v_model=("menu_color", "#47FF4077"))
-                v3.VSelect(
-                    label="Drag button position",
-                    items=(
-                        [
-                            "top-right",
-                            "right-top",
-                            "right-bottom",
-                            "bottom-right",
-                            "bottom-left",
-                            "left-bottom",
-                            "left-top",
-                            "top-left",
-                        ],
-                    ),
-                    v_model=("drag_position", "top-left"),
-                )
-                v3.VSwitch(
-                    v_model=("show_rad_menu_right_menu", False), label="Open right menu"
-                )
-                v3.VSwitch(
-                    v_model=("show_rad_menu_left_menu", False), label="Open left menu"
-                )
-                v3.VSwitch(
-                    v_model=("show_rad_menu_up_menu", False), label="Open up menu"
-                )
-                v3.VSwitch(
-                    v_model=("show_rad_menu_down_menu", False), label="Open down menu"
-                )
-                with v3.VCard(title="Inner Wheel", color=("inner_color",)):
-                    v3.VSlider(
-                        thumb_label="always",
-                        v_model=("inner_inner_radius", 40.0),
-                        label="inner radius",
-                        min=0,
-                        max=360,
-                    )
-                    v3.VSlider(
-                        thumb_label="always",
-                        v_model=("inner_outer_radius", 100.0),
-                        label="outer radius",
-                        min=0,
-                        max=360,
-                    )
-                    v3.VColorPicker(v_model=("inner_color", "#777777ee"))
-                    v3.VSlider(
-                        thumb_label="always",
-                        v_model=("inner_begin_angle", 0),
-                        label="inner begin angle",
-                        min=0,
-                        max=360,
-                    )
-                    v3.VSlider(
-                        thumb_label="always",
-                        v_model=("inner_end_angle", 360.0),
-                        label="inner end angle",
-                        min=0,
-                        max=360,
-                    )
-                    v3.VSlider(
-                        thumb_label="always",
-                        v_model=("ruler_size", 1.0),
-                        label="ruler size",
-                        min=0,
-                        max=4,
-                    )
-                with v3.VCard(title="Outer Wheel", color=("outer_color",)):
-                    SliderWithDefaultValue(
-                        label="inner radius",
-                        state_var_name="outer_inner_radius",
-                        thumb_label="always",
-                        min=0,
-                        max=360,
+        with (
+            VAppLayout(self.server) as self.ui,
+            self.ui.root,
+            v3.VContainer(fluid=True),
+            v3.VRow(),
+        ):
+            with v3.VCol(cols="auto"):
+                html.H1("Right click to open the radial menu")
+                with v3.VCard(width="500px", color="#eeee"):
+                    v3.VSwitch(
+                        v_model=("close_menu_button", False),
+                        label="Replace central close menu button",
                     )
                     SliderWithDefaultValue(
-                        label="outer radius",
-                        state_var_name="outer_outer_radius",
-                        thumb_label="always",
+                        label="central button radius",
+                        state_var_name="close_menu_button_radius",
                         min=0,
                         max=360,
-                    )
-                    v3.VColorPicker(v_model=("outer_color", "#777777bb"))
-                    v3.VSlider(
                         thumb_label="always",
-                        v_model=("outer_begin_angle", 0),
-                        label="outer begin angle",
-                        min=0,
-                        max=360,
                     )
-                    v3.VSlider(
-                        thumb_label="always",
-                        v_model=("outer_end_angle", 360.0),
-                        label="outer end angle",
-                        min=0,
-                        max=360,
+                    v3.VSwitch(
+                        v_model=("show_rad_menu", False), label="Open radial menu"
                     )
-
-            TrameSlicerRadialMenu(
-                v_model_open=("show_rad_menu",),
-                v_model_rightmenuopen=("show_rad_menu_right_menu",),
-                v_model_leftmenuopen=("show_rad_menu_left_menu",),
-                v_model_upmenuopen=("show_rad_menu_up_menu",),
-                v_model_downmenuopen=("show_rad_menu_down_menu",),
-                close_menu_button_radius=("close_menu_button_radius",),
-                color=("menu_color",),
-                drag_position=("drag_position",),
-            )
+                    v3.VColorPicker(v_model=("menu_color", "#47FF4077"))
+                    v3.VSelect(
+                        label="Drag button position",
+                        items=(
+                            [
+                                "top-right",
+                                "right-top",
+                                "right-bottom",
+                                "bottom-right",
+                                "bottom-left",
+                                "left-bottom",
+                                "left-top",
+                                "top-left",
+                            ],
+                        ),
+                        v_model=("drag_position", "top-left"),
+                    )
+                    v3.VSwitch(
+                        v_model=("show_rad_menu_right_menu", False),
+                        label="Open right menu",
+                    )
+                    v3.VSwitch(
+                        v_model=("show_rad_menu_left_menu", False),
+                        label="Open left menu",
+                    )
+                    v3.VSwitch(
+                        v_model=("show_rad_menu_up_menu", False), label="Open up menu"
+                    )
+                    v3.VSwitch(
+                        v_model=("show_rad_menu_down_menu", False),
+                        label="Open down menu",
+                    )
+                    with v3.VCard(title="Inner Wheel", color=("inner_color",)):
+                        v3.VSlider(
+                            thumb_label="always",
+                            v_model=("inner_inner_radius", 40.0),
+                            label="inner radius",
+                            min=0,
+                            max=360,
+                        )
+                        v3.VSlider(
+                            thumb_label="always",
+                            v_model=("inner_outer_radius", 100.0),
+                            label="outer radius",
+                            min=0,
+                            max=360,
+                        )
+                        v3.VColorPicker(v_model=("inner_color", "#777777ee"))
+                        v3.VSlider(
+                            thumb_label="always",
+                            v_model=("inner_begin_angle", 0),
+                            label="inner begin angle",
+                            min=0,
+                            max=360,
+                        )
+                        v3.VSlider(
+                            thumb_label="always",
+                            v_model=("inner_end_angle", 360.0),
+                            label="inner end angle",
+                            min=0,
+                            max=360,
+                        )
+                        v3.VSlider(
+                            thumb_label="always",
+                            v_model=("ruler_size", 1.0),
+                            label="ruler size",
+                            min=0,
+                            max=4,
+                        )
+                    with v3.VCard(title="Outer Wheel", color=("outer_color",)):
+                        SliderWithDefaultValue(
+                            label="inner radius",
+                            state_var_name="outer_inner_radius",
+                            thumb_label="always",
+                            min=0,
+                            max=360,
+                        )
+                        SliderWithDefaultValue(
+                            label="outer radius",
+                            state_var_name="outer_outer_radius",
+                            thumb_label="always",
+                            min=0,
+                            max=360,
+                        )
+                        v3.VColorPicker(v_model=("outer_color", "#777777bb"))
+                        v3.VSlider(
+                            thumb_label="always",
+                            v_model=("outer_begin_angle", 0),
+                            label="outer begin angle",
+                            min=0,
+                            max=360,
+                        )
+                        v3.VSlider(
+                            thumb_label="always",
+                            v_model=("outer_end_angle", 360.0),
+                            label="outer end angle",
+                            min=0,
+                            max=360,
+                        )
+            with v3.VCol(
+                style="position: relative; margin-top: 100px; margin-bottom: 100px; margin-right: 100px; background-color: rgba(0,255,255,0.2);",
+                cols=(7,),
+            ):
+                html.H1("Container div")
+                TrameSlicerRadialMenu(
+                    v_model_open=("show_rad_menu",),
+                    v_model_rightmenuopen=("show_rad_menu_right_menu",),
+                    v_model_leftmenuopen=("show_rad_menu_left_menu",),
+                    v_model_upmenuopen=("show_rad_menu_up_menu",),
+                    v_model_downmenuopen=("show_rad_menu_down_menu",),
+                    close_menu_button_radius=("close_menu_button_radius",),
+                    color=("menu_color",),
+                    drag_position=("drag_position",),
+                )
+            # v3.VCol(cols=(1, ), md=(9, ))
 
 
 def main():

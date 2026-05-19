@@ -1,40 +1,80 @@
-import { ref, onMounted, onUnmounted, type Ref } from 'vue'
+import { ref, onMounted, onUnmounted, computed, type Ref, type ComputedRef } from 'vue'
+import {
+  hasNonZeroArea,
+  domRectToBBox,
+  bBoxUnion,
+  translateBBox,
+  BBoxWidth,
+  BBoxHeight,
+} from '@/utils/dom'
+import type { BBox, Point } from '@/utils/types'
 
 interface DragState {
   isDragging: boolean
-  startX: number
-  startY: number
+  startPos: Point
   initialMouseX: number
   initialMouseY: number
 }
 
-export function useDraggableContextMenu(isOpen: Ref<boolean>): {
-  cx: Ref<number>
-  cy: Ref<number>
+export function useDraggableContextMenu(
+  isOpen: Ref<boolean>,
+  containerDiv: Ref<HTMLDivElement | undefined>,
+  innerDiv: Ref<HTMLDivElement | undefined>,
+): {
+  centerPos: ComputedRef<Point>
   startDrag: (event: MouseEvent) => void
 } {
-  // Current position of the context menu on the page
-  const cx = ref<number>(0)
-  const cy = ref<number>(0)
+  // Click position on the page
+  const clickPos = ref<Point>([0, 0])
+
+  // Container BBox in page coordinate
+  const containerRect: ComputedRef<BBox> = computed(() =>
+    translateBBox(containerDiv.value!.getBoundingClientRect(), [window.scrollX, window.scrollY]),
+  )
+
+  const centerPos = computed(() => clampPosition(clickPos.value))
 
   let dragState: DragState = {
     isDragging: false,
-    startX: 0,
-    startY: 0,
+    startPos: [0, 0],
     initialMouseX: 0,
     initialMouseY: 0,
   }
 
-  // Moves the menu by the delta between the current mouse position
-  // and where the drag originally started
+  // Clamp a position so the BBox around children elements fits in containerDiv
+  const clampPosition = (newPos: Point): Point => {
+    if (!containerDiv.value) {
+      return newPos
+    }
+    const bboxes: BBox[] = Array.from(innerDiv.value!.querySelectorAll('*'))
+      .map((el) => el.getBoundingClientRect())
+      .map(domRectToBBox)
+      .filter(hasNonZeroArea) // bboxes of children elements in viewport's coordinates
+      .map((bbox: BBox) => translateBBox(bbox, [window.scrollX, window.scrollY])) //in page's coordinates
+      .map((bbox: BBox) =>
+        translateBBox(bbox, [-containerRect.value.left, -containerRect.value.top]),
+      ) // in container's div coordinates
+    if (bboxes.length == 0) return newPos
+
+    const bbox = bboxes.reduce(bBoxUnion)
+    const minX = centerPos.value[0] - bbox.left
+    const minY = centerPos.value[1] - bbox.top
+    const maxX = BBoxWidth(containerRect.value) - (bbox.right - centerPos.value[0])
+    const maxY = BBoxHeight(containerRect.value) - (bbox.bottom - centerPos.value[1])
+
+    const [newX, newY] = newPos
+    return [Math.min(maxX, Math.max(minX, newX)), Math.min(maxY, Math.max(minY, newY))]
+  }
+
+  // Moves the menu by the delta between the current mouse position and where the drag originally
+  // started
   const onDrag = (event: MouseEvent): void => {
     if (!dragState.isDragging) return
 
     const dx = event.pageX - dragState.initialMouseX
     const dy = event.pageY - dragState.initialMouseY
 
-    cx.value = dragState.startX + dx
-    cy.value = dragState.startY + dy
+    clickPos.value = [dragState.startPos[0] + dx, dragState.startPos[1] + dy]
   }
 
   const stopDrag = (): void => {
@@ -46,8 +86,7 @@ export function useDraggableContextMenu(isOpen: Ref<boolean>): {
   const startDrag = (event: MouseEvent): void => {
     dragState = {
       isDragging: true,
-      startX: cx.value,
-      startY: cy.value,
+      startPos: centerPos.value,
       initialMouseX: event.pageX,
       initialMouseY: event.pageY,
     }
@@ -61,8 +100,8 @@ export function useDraggableContextMenu(isOpen: Ref<boolean>): {
   const rightClick = (event: MouseEvent): void => {
     event.preventDefault()
     isOpen.value = true
-    cx.value = event.pageX
-    cy.value = event.pageY
+    console.log(event.pageX - containerRect.value.left, event.pageY - containerRect.value.top)
+    clickPos.value = [event.pageX - containerRect.value.left, event.pageY - containerRect.value.top]
   }
 
   onMounted(() => {
@@ -73,6 +112,5 @@ export function useDraggableContextMenu(isOpen: Ref<boolean>): {
     document.removeEventListener('contextmenu', rightClick)
     stopDrag()
   })
-
-  return { cx, cy, startDrag }
+  return { centerPos, startDrag }
 }

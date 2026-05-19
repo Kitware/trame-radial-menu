@@ -14,3 +14,10 @@ export type EightSymmetryPoints = {
   'top-right': Point
   'right-top': Point
 }
+
+export type BBox = {
+  top: number
+  left: number
+  bottom: number
+  right: number
+}

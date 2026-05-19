@@ -1,57 +1,59 @@
 <template>
-  <div class="centerAbs" v-show="isOpen" :style="positionStyleMain">
-    <slot />
-    <div :style="positionStyleCenterButton" class="centerAbs">
-      <slot name="central">
-        <tooltip-button
-          text="Close menu"
-          class="radMenuButton"
-          icon="mdi-close"
-          @click="isOpen = false"
-          :color="color"
-          :size="closeMenuButtonRadius >= 0 ? 2 * closeMenuButtonRadius : 2 * minRadius"
-        />
-      </slot>
-    </div>
-    <div
-      v-for="placeholderName in Object.keys(placeholdersPositionStyle)"
-      :key="placeholderName"
-      :style="placeholdersPositionStyle[placeholderName]"
-      class="centerAbs"
-    >
-      <slot :name="placeholderName">
-        <tooltip-button
-          v-if="placeholderName == props.dragPosition"
-          class="radMenuButton dragZone"
-          text="Drag menu"
-          location="top"
-          icon="mdi-cursor-move"
-          @mousedown="startDrag"
-          :color="color"
-        />
-        <tooltip-button
-          v-else-if="placeholderName == 'right-top'"
-          text="Open side menu"
-          location="end"
-          class="radMenuButton"
-          :icon="rightMenuOpen ? 'mdi-chevron-left' : 'mdi-chevron-right'"
-          :active="rightMenuOpen"
-          @click="rightMenuOpen = !rightMenuOpen"
-          :color="color"
-        />
-      </slot>
-    </div>
-    <div class="sideDiv" v-show="rightMenuOpen" :style="positionStyleRightMenu">
-      <slot name="right-menu" />
-    </div>
-    <div class="sideDiv" v-show="leftMenuOpen" :style="positionStyleLeftMenu">
-      <slot name="left-menu" />
-    </div>
-    <div class="sideDiv" v-show="upMenuOpen" :style="positionStyleUpMenu">
-      <slot name="up-menu" />
-    </div>
-    <div class="sideDiv" v-show="downMenuOpen" :style="positionStyleDownMenu">
-      <slot name="down-menu" />
+  <div ref="outerDiv" class="fullSize" >
+    <div ref="innerDiv" class="centerAbs" v-show="isOpen" :style="positionStyleMain">
+      <slot />
+      <div :style="positionStyleCenterButton" class="centerAbs">
+        <slot name="central">
+          <tooltip-button
+            text="Close menu"
+            class="radMenuButton hasbbox"
+            icon="mdi-close"
+            @click="isOpen = false"
+            :color="color"
+            :size="closeMenuButtonRadius >= 0 ? 2 * closeMenuButtonRadius : 2 * minRadius"
+          />
+        </slot>
+      </div>
+      <div
+        v-for="placeholderName in Object.keys(placeholdersPositionStyle)"
+        :key="placeholderName"
+        :style="placeholdersPositionStyle[placeholderName]"
+        class="centerAbs"
+      >
+        <slot :name="placeholderName">
+          <tooltip-button
+            v-if="placeholderName == props.dragPosition"
+            class="radMenuButton dragZone hasbbox"
+            text="Drag menu"
+            location="top"
+            icon="mdi-cursor-move"
+            @mousedown="startDrag"
+            :color="color"
+          />
+          <tooltip-button
+            v-else-if="placeholderName == 'right-top'"
+            :text="rightMenuOpen ? 'Close right menu' : 'Open right menu'"
+            location="end"
+            class="radMenuButton hasbbox"
+            :icon="rightMenuOpen ? 'mdi-chevron-left' : 'mdi-chevron-right'"
+            :active="rightMenuOpen"
+            @click="rightMenuOpen = !rightMenuOpen"
+            :color="color"
+          />
+        </slot>
+      </div>
+      <div class="sideDiv hasbbox" v-show="rightMenuOpen" :style="positionStyleRightMenu">
+        <slot name="right-menu" />
+      </div>
+      <div class="sideDiv hasbbox" v-show="leftMenuOpen" :style="positionStyleLeftMenu">
+        <slot name="left-menu" />
+      </div>
+      <div class="sideDiv hasbbox" v-show="upMenuOpen" :style="positionStyleUpMenu">
+        <slot name="up-menu" />
+      </div>
+      <div class="sideDiv hasbbox" v-show="downMenuOpen" :style="positionStyleDownMenu">
+        <slot name="down-menu" />
+      </div>
     </div>
   </div>
 </template>
@@ -94,7 +96,9 @@ const downMenuOpen = defineModel('downmenuopen', { default: false })
 
 // Use composable that handles open on right click and drag when startDrag is
 // called
-const { cx, cy, startDrag } = useDraggableContextMenu(isOpen)
+const outerDiv = ref<HTMLDivElement>()
+const innerDiv = ref<HTMLDivElement>()
+const { centerPos, startDrag } = useDraggableContextMenu(isOpen, outerDiv, innerDiv)
 
 // Handle maximum radius and tells it to children components
 
@@ -114,10 +118,10 @@ provide('maxRadius', maxRadius)
 
 // Position divs
 
-// position the menu in the page at (cx, cy)
+// position the menu in the page at `centerPos`
 const positionStyleMain = computed(() => ({
   ...boxToStyle([maxRadius.value * 2, maxRadius.value * 2]),
-  ...pointToStyle([cx.value, cy.value]),
+  ...pointToStyle(centerPos.value),
 }))
 
 // position the center button at the center of the menu
@@ -150,6 +154,13 @@ const placeholdersPositionStyle = computed(() =>
 .centerAbs {
   position: absolute;
   transform: translate(-50%, -50%);
+  pointer-events: auto;
+}
+
+.fullSize {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
 .sideDiv {
