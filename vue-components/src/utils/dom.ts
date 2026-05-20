@@ -2,10 +2,10 @@ import type { Point, BBox } from './types'
 
 export function translateBBox(rect: BBox, vec: Point) {
   return {
-    left: rect.left + vec[0],
-    top: rect.top + vec[1],
-    right: rect.right + vec[0],
-    bottom: rect.bottom + vec[1],
+    left: rect.left + vec.x,
+    top: rect.top + vec.y,
+    right: rect.right + vec.x,
+    bottom: rect.bottom + vec.y,
   }
 }
 

@@ -96,7 +96,7 @@ const leftMenuOpen = defineModel<boolean>('leftmenuopen', { default: false })
 const upMenuOpen = defineModel<boolean>('upmenuopen', { default: false })
 const downMenuOpen = defineModel<boolean>('downmenuopen', { default: false })
 
-const pagePos = ref<Point>([0, 0])
+const pagePos = ref<Point>({ x: 0, y: 0 })
 
 // Use composable that handles open on right click and drag when startDrag is
 // called
@@ -133,13 +133,19 @@ const positionStyleMain = computed(() => ({
 }))
 
 // position the center button at the center of the menu
-const positionStyleCenterButton = computed(() => pointToStyle([maxRadius.value, maxRadius.value]))
+const positionStyleCenterButton = computed(() =>
+  pointToStyle({ x: maxRadius.value, y: maxRadius.value }),
+)
 
 // position the side menus
-const positionStyleRightMenu = computed(() => pointToStyle([2 * maxRadius.value + 20, 0]))
-const positionStyleLeftMenu = computed(() => pointToStyleTopRight([2 * maxRadius.value + 20, 0]))
-const positionStyleUpMenu = computed(() => pointToStyleBottomLeft([0, 2 * maxRadius.value + 20]))
-const positionStyleDownMenu = computed(() => pointToStyle([0, 2 * maxRadius.value + 20]))
+const positionStyleRightMenu = computed(() => pointToStyle({ x: 2 * maxRadius.value + 20, y: 0 }))
+const positionStyleLeftMenu = computed(() =>
+  pointToStyleTopRight({ x: 2 * maxRadius.value + 20, y: 0 }),
+)
+const positionStyleUpMenu = computed(() =>
+  pointToStyleBottomLeft({ x: 0, y: 2 * maxRadius.value + 20 }),
+)
+const positionStyleDownMenu = computed(() => pointToStyle({ x: 0, y: 2 * maxRadius.value + 20 }))
 
 // Position the 8 small placeholders
 
@@ -160,9 +166,9 @@ const placeholdersPositionStyle = computed(() =>
 // Open at cursor position exposed callback
 
 // Always keep track of mouse position in case of openAtCursor call
-const cursorPos = ref<Point>([0, 0])
+const cursorPos = ref<Point>({ x: 0, y: 0 })
 document.addEventListener('mousemove', (event) => {
-  cursorPos.value = [event.pageX, event.pageY]
+  cursorPos.value = { x: event.pageX, y: event.pageY }
 })
 
 const openAtCursor = () => {
