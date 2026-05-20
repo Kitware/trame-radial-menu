@@ -1,6 +1,6 @@
 <template>
   <div ref="outerDiv" class="fullSize">
-    <div ref="innerDiv" class="centerAbs" v-show="isOpen" :style="positionStyleMain">
+    <div class="centerAbs" v-show="isOpen" :style="positionStyleMain">
       <slot />
       <div :style="positionStyleCenterButton" class="centerAbs">
         <slot name="central">
@@ -22,7 +22,7 @@
       >
         <slot :name="placeholderName">
           <tooltip-button
-            v-if="placeholderName == props.dragPosition"
+            v-if="placeholderName == props.dragButtonPosition"
             class="radMenuButton dragZone"
             text="Drag menu"
             location="top"
@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { provide, ref, computed, type ComputedRef } from 'vue'
 
-import type { EightSymmetryPoints } from '@/utils/types'
+import type { EightSymmetryPoints, Point } from '@/utils/types'
 import TooltipButton from './TooltipButton.vue'
 import {
   boxToStyle,
@@ -76,15 +76,17 @@ import { useDraggableContextMenu } from '../composables/useDraggableContextMenu'
 // Setup
 
 interface Props {
+  openAtRightClickPos: boolean
   closeMenuButtonRadius: number
   color: string
-  dragPosition: string
+  dragButtonPosition: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  openAtRightClickPos: true,
   closeMenuButtonRadius: -1,
   color: '#7777',
-  dragPosition: 'top-right',
+  dragButtonPosition: 'top-right',
 })
 
 const isOpen = defineModel<boolean>('open', { default: false })
@@ -94,11 +96,17 @@ const leftMenuOpen = defineModel<boolean>('leftmenuopen', { default: false })
 const upMenuOpen = defineModel<boolean>('upmenuopen', { default: false })
 const downMenuOpen = defineModel<boolean>('downmenuopen', { default: false })
 
+const pagePos = ref<Point>([0, 0])
+
 // Use composable that handles open on right click and drag when startDrag is
 // called
 const outerDiv = ref<HTMLDivElement>()
-const innerDiv = ref<HTMLDivElement>()
-const { centerPos, startDrag } = useDraggableContextMenu(isOpen, outerDiv, innerDiv)
+const { centerPos, startDrag } = useDraggableContextMenu(
+  isOpen,
+  pagePos,
+  outerDiv,
+  computed(() => props.openAtRightClickPos),
+)
 
 // Handle maximum radius and tells it to children components
 
@@ -148,6 +156,21 @@ const placeholdersPosition = computed<EightSymmetryPoints>(() =>
 const placeholdersPositionStyle = computed(() =>
   applyToValues(placeholdersPosition.value, pointToStyle),
 )
+
+// Open at cursor position exposed callback
+
+// Always keep track of mouse position in case of openAtCursor call
+const cursorPos = ref<Point>([0, 0])
+document.addEventListener('mousemove', (event) => {
+  cursorPos.value = [event.pageX, event.pageY]
+})
+
+const openAtCursor = () => {
+  pagePos.value = cursorPos.value
+}
+defineExpose({
+  openAtCursor,
+})
 </script>
 
 <style scoped>

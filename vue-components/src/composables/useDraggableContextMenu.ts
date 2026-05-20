@@ -17,19 +17,27 @@ interface DragState {
 
 export function useDraggableContextMenu(
   isOpen: Ref<boolean>,
+  pagePos: Ref<Point>,
   containerDiv: Ref<HTMLDivElement | undefined>,
-  innerDiv: Ref<HTMLDivElement | undefined>,
+  openAtRightClick: Ref<boolean> = ref(true),
 ): {
   centerPos: ComputedRef<Point>
   startDrag: (event: MouseEvent) => void
 } {
-  // Click position on the page
-  const clickPos = ref<Point>([0, 0])
-
   // Container BBox in page coordinate
-  const containerRect: ComputedRef<BBox> = computed(() =>
-    translateBBox(containerDiv.value!.getBoundingClientRect(), [window.scrollX, window.scrollY]),
-  )
+  const containerRect: ComputedRef<BBox> = computed(() => {
+    if (!containerDiv.value) return { left: 0, top: 0, right: 10, bottom: 10 }
+    return translateBBox(containerDiv.value!.getBoundingClientRect(), [
+      window.scrollX,
+      window.scrollY,
+    ])
+  })
+
+  // Click position on the page
+  const clickPos: ComputedRef<Point> = computed(() => [
+    pagePos.value[0] - containerRect.value.left,
+    pagePos.value[1] - containerRect.value.top,
+  ])
 
   const centerPos = computed(() => clampPosition(clickPos.value))
 
@@ -38,7 +46,7 @@ export function useDraggableContextMenu(
     if (!containerDiv.value) {
       return newPos
     }
-    const bboxes: BBox[] = Array.from(innerDiv.value!.querySelectorAll('*'))
+    const bboxes: BBox[] = Array.from(containerDiv.value!.querySelectorAll('*'))
       .map((el) => el.getBoundingClientRect())
       .map(domRectToBBox)
       .filter(hasNonZeroArea) // bboxes of children elements in viewport's coordinates
@@ -74,8 +82,7 @@ export function useDraggableContextMenu(
 
     const dx = event.pageX - dragState.initialMouse[0]
     const dy = event.pageY - dragState.initialMouse[1]
-
-    clickPos.value = [dragState.startPos[0] + dx, dragState.startPos[1] + dy]
+    pagePos.value = [dragState.startPos[0] + dx, dragState.startPos[1] + dy]
   }
 
   const stopDrag = (): void => {
@@ -87,7 +94,10 @@ export function useDraggableContextMenu(
   const startDrag = (event: MouseEvent): void => {
     dragState = {
       isDragging: true,
-      startPos: centerPos.value,
+      startPos: [
+        centerPos.value[0] + containerRect.value.left,
+        centerPos.value[1] + containerRect.value.top,
+      ],
       initialMouse: [event.pageX, event.pageY],
     }
 
@@ -98,9 +108,11 @@ export function useDraggableContextMenu(
 
   // Opens the context menu at the cursor position when the user right-clicks
   const rightClick = (event: MouseEvent): void => {
-    event.preventDefault()
-    isOpen.value = true
-    clickPos.value = [event.pageX - containerRect.value.left, event.pageY - containerRect.value.top]
+    if (openAtRightClick.value) {
+      event.preventDefault()
+      isOpen.value = true
+      pagePos.value = [event.pageX, event.pageY]
+    }
   }
 
   onMounted(() => {
