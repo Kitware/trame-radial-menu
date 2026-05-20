@@ -172,6 +172,7 @@ document.addEventListener('mousemove', (event) => {
 })
 
 const openAtCursor = () => {
+  isOpen.value = true
   pagePos.value = cursorPos.value
 }
 defineExpose({

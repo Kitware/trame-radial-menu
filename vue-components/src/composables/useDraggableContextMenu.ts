@@ -26,7 +26,7 @@ export function useDraggableContextMenu(
 } {
   // Container BBox in page coordinate
   const containerRect: ComputedRef<BBox> = computed(() => {
-    if (!containerDiv.value) return { left: 0, top: 0, right: 10, bottom: 10 }
+    if (!containerDiv.value) return { left: 0, top: 0, right: 100, bottom: 100 }
     return translateBBox(containerDiv.value!.getBoundingClientRect(), {
       x: window.scrollX,
       y: window.scrollY,
