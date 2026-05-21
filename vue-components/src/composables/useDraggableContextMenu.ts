@@ -25,42 +25,41 @@ export function useDraggableContextMenu(
   startDrag: (event: MouseEvent) => void
 } {
   // Container BBox in page coordinate
-  const containerRect: ComputedRef<BBox> = computed(() => {
-    if (!containerDiv.value) return { left: 0, top: 0, right: 100, bottom: 100 }
-    return translateBBox(containerDiv.value!.getBoundingClientRect(), {
+  const getContainerRect = (): BBox => {
+    if (!containerDiv.value) return { left: 0, top: 0, right: 0, bottom: 0 }
+    return translateBBox(containerDiv.value.getBoundingClientRect(), {
       x: window.scrollX,
       y: window.scrollY,
     })
-  })
+  }
 
   // Click position on the page
   const clickPos: ComputedRef<Point> = computed(() => ({
-    x: pagePos.value.x - containerRect.value.left,
-    y: pagePos.value.y - containerRect.value.top,
+    x: pagePos.value.x - getContainerRect().left,
+    y: pagePos.value.y - getContainerRect().top,
   }))
 
   const centerPos = computed(() => clampPosition(clickPos.value))
 
   // Clamp a position so the BBox around children elements fits in containerDiv
   const clampPosition = (newPos: Point): Point => {
-    if (!containerDiv.value) {
-      return newPos
-    }
+    if (!containerDiv.value) return newPos
+    if (!hasNonZeroArea(getContainerRect())) return newPos
     const bboxes: BBox[] = Array.from(containerDiv.value!.querySelectorAll('*'))
       .map((el) => el.getBoundingClientRect())
       .map(domRectToBBox)
       .filter(hasNonZeroArea) // bboxes of children elements in viewport's coordinates
       .map((bbox: BBox) => translateBBox(bbox, { x: window.scrollX, y: window.scrollY })) //in page's coordinates
       .map((bbox: BBox) =>
-        translateBBox(bbox, { x: -containerRect.value.left, y: -containerRect.value.top }),
+        translateBBox(bbox, { x: -getContainerRect().left, y: -getContainerRect().top }),
       ) // in container's div coordinates
     if (bboxes.length == 0) return newPos
 
     const bbox = bboxes.reduce(bBoxUnion)
     const upperLeftX = centerPos.value.x - bbox.left
     const upperLeftY = centerPos.value.y - bbox.top
-    const lowerRightX = BBoxWidth(containerRect.value) - (bbox.right - centerPos.value.x)
-    const lowerRightY = BBoxHeight(containerRect.value) - (bbox.bottom - centerPos.value.y)
+    const lowerRightX = BBoxWidth(getContainerRect()) - (bbox.right - centerPos.value.x)
+    const lowerRightY = BBoxHeight(getContainerRect()) - (bbox.bottom - centerPos.value.y)
 
     const newX = newPos.x
     const newY = newPos.y
@@ -95,10 +94,7 @@ export function useDraggableContextMenu(
   const startDrag = (event: MouseEvent): void => {
     dragState = {
       isDragging: true,
-      startPos: {
-        x: centerPos.value.x + containerRect.value.left,
-        y: centerPos.value.y + containerRect.value.top,
-      },
+      startPos: { x: pagePos.value.x, y: pagePos.value.y },
       initialMouse: { x: event.pageX, y: event.pageY },
     }
 
