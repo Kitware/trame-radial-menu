@@ -1,6 +1,6 @@
 <template>
   <div ref="outerDiv" class="fullSize">
-    <div class="centerAbs" v-show="isOpen" :style="positionStyleMain">
+    <div ref="inerDiv" class="centerAbs" v-show="isOpen" :style="positionStyleMain">
       <slot />
       <div :style="positionStyleCenterButton" class="centerAbs">
         <slot name="central">
@@ -101,10 +101,12 @@ const pagePos = ref<Point>({ x: 0, y: 0 })
 // Use composable that handles open on right click and drag when startDrag is
 // called
 const outerDiv = ref<HTMLDivElement>()
+const innerDiv = ref<HTMLDivElement>()
 const { centerPos, startDrag } = useDraggableContextMenu(
   isOpen,
   pagePos,
   outerDiv,
+  innerDiv,
   computed(() => props.openAtRightClickPos),
 )
 

@@ -19,6 +19,7 @@ export function useDraggableContextMenu(
   isOpen: Ref<boolean>,
   pagePos: Ref<Point>,
   containerDiv: Ref<HTMLDivElement | undefined>,
+  innerDiv: Ref<HTMLDivElement | undefined>,
   openAtRightClick: Ref<boolean> = ref(true),
 ): {
   centerPos: ComputedRef<Point>
@@ -43,9 +44,9 @@ export function useDraggableContextMenu(
 
   // Clamp a position so the BBox around children elements fits in containerDiv
   const clampPosition = (newPos: Point): Point => {
-    if (!containerDiv.value) return newPos
+    if (!containerDiv.value || !innerDiv.value) return newPos
     if (!hasNonZeroArea(getContainerRect())) return newPos
-    const bboxes: BBox[] = Array.from(containerDiv.value!.querySelectorAll('*'))
+    const bboxes: BBox[] = Array.from(innerDiv.value!.querySelectorAll('*'))
       .map((el) => el.getBoundingClientRect())
       .map(domRectToBBox)
       .filter(hasNonZeroArea) // bboxes of children elements in viewport's coordinates
