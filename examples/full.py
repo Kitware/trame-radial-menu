@@ -261,7 +261,7 @@ class ExampleRadialMenu(TrameApp):
                             min=0,
                             max=360,
                         )
-                        v3.VColorPicker(v_model=("outer_color", "#777777bb"))
+                        v3.VColorPicker(v_model=("outer_color", "#777b"))
                         v3.VSlider(
                             thumb_label="always",
                             v_model=("outer_begin_angle", 0),
