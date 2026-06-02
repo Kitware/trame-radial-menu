@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from enum import Enum, auto
 
 from trame.widgets.html import Div, Template
 from trame_server import Server
@@ -10,9 +11,14 @@ from .radial_markups_buttons_ui import RadialMarkupsButtonsUI
 from .segmentation.custom_segment_editor_ui import CustomSegmentEditorUI
 
 
+class MenuType(Enum):
+    MARKUPS = auto()
+    SEGMENTATION = auto()
+
+
 @dataclass
 class ToolRadMenuState(RadMenuState):
-    segment_mode: bool = False
+    active_menu: MenuType = MenuType.MARKUPS
 
 
 class ToolRadMenuUI(RadMenuUI):
@@ -27,10 +33,11 @@ class ToolRadMenuUI(RadMenuUI):
 
         with self:
             self._markups_wheel = RadialMarkupsButtonsUI(
-                v_if=f"!{self.opened_segmentation_wheel}"
+                v_if=f"{self.name.active_menu} == {MenuType.MARKUPS.value}"
             )
             self._segmentation_wheel = CustomSegmentEditorUI(
-                segment_editor_ui, v_if=f"{self.opened_segmentation_wheel}"
+                segment_editor_ui,
+                v_if=f"{self.name.active_menu} == '{MenuType.SEGMENTATION.value}'",
             )
 
             with Template(v_slot_right_menu=""):
@@ -45,13 +52,13 @@ class ToolRadMenuUI(RadMenuUI):
             with Template(v_slot_left_top=""):
                 RadMenuPlaceholderButton(
                     text=(
-                        f"{self.opened_segmentation_wheel} ? 'Markups' : 'Segmentation'",
+                        f"{self.name.active_menu} == '{MenuType.SEGMENTATION.value}' ? 'Markups' : 'Segmentation'",
                     ),
                     location="start",
                     icon=(
-                        f"{self.opened_segmentation_wheel} ? 'mdi-circle-small' : 'mdi-brush'",
+                        f"{self.name.active_menu} == '{MenuType.SEGMENTATION.value}' ? 'mdi-circle-small' : 'mdi-brush'",
                     ),
-                    click=self._toggle_segment_menu_selected,
+                    click=self._switch_active_menu,
                     variant="flat",
                 )
 
@@ -60,7 +67,7 @@ class ToolRadMenuUI(RadMenuUI):
                     text=(
                         f"{self.name.right_menu_open} ? 'Close segmentation tool options' : 'Open segmentation tool options'",
                     ),
-                    v_if=self.opened_segmentation_wheel,
+                    v_if=f"{self.name.active_menu} == '{MenuType.SEGMENTATION.value}'",
                     icon=(
                         f"{self.name.right_menu_open} ? 'mdi-chevron-left' : 'mdi-chevron-right'",
                     ),
@@ -75,7 +82,7 @@ class ToolRadMenuUI(RadMenuUI):
                     text=(
                         f"{self.name.up_menu_open} ? 'Close segments list' : 'Open segments list'",
                     ),
-                    v_if=self.opened_segmentation_wheel,
+                    v_if=f"{self.name.active_menu} == '{MenuType.SEGMENTATION.value}'",
                     location="top",
                     icon=(
                         f"{self.name.up_menu_open} ? 'mdi-chevron-down' : 'mdi-chevron-up'",
@@ -90,7 +97,7 @@ class ToolRadMenuUI(RadMenuUI):
                     text=(
                         f"{self.name.down_menu_open} ? 'Close masking options' : 'Open masking options'",
                     ),
-                    v_if=self.opened_segmentation_wheel,
+                    v_if=f"{self.name.active_menu} == '{MenuType.SEGMENTATION.value}'",
                     location="bottom",
                     icon="mdi-domino-mask",
                     click=self._toggle_down_menu_opened,
@@ -100,7 +107,7 @@ class ToolRadMenuUI(RadMenuUI):
 
             with Template(v_slot_bottom_right=""):
                 RadMenuPlaceholderButton(
-                    v_if=self.opened_segmentation_wheel,
+                    v_if=f"{self.name.active_menu} == '{MenuType.SEGMENTATION.value}'",
                     text="Undo",
                     location="bottom",
                     icon="mdi-undo",
@@ -109,7 +116,7 @@ class ToolRadMenuUI(RadMenuUI):
                 )
             with Template(v_slot_right_bottom=""):
                 RadMenuPlaceholderButton(
-                    v_if=self.opened_segmentation_wheel,
+                    v_if=f"{self.name.active_menu} == '{MenuType.SEGMENTATION.value}'",
                     text="Redo",
                     location="end",
                     icon="mdi-redo",
@@ -117,13 +124,11 @@ class ToolRadMenuUI(RadMenuUI):
                     variant="flat",
                 )
 
-    @property
-    def opened_segmentation_wheel(self):
-        return self._typed_state.name.segment_mode
-
-    def _toggle_segment_menu_selected(self):
-        self._typed_state.data.segment_mode = not (self._typed_state.data.segment_mode)
-        if not (self._typed_state.data.segment_mode):
+    def _switch_active_menu(self):
+        if self.data.active_menu == MenuType.MARKUPS:
+            self.data.active_menu = MenuType.SEGMENTATION
+        elif self.data.active_menu == MenuType.SEGMENTATION:
+            self.data.active_menu = MenuType.MARKUPS
             self.data.right_menu_open = False
             self.data.up_menu_open = False
             self.data.down_menu_open = False
