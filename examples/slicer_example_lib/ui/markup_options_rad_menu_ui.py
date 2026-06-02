@@ -25,3 +25,7 @@ class MarkupOptionsRadMenuUI(RadMenuUI):
                 Div()
             with Template(v_slot_central=""):
                 Div()
+
+    @property
+    def markups_context_menu(self):
+        return self._markups_context_menu
