@@ -122,7 +122,7 @@ class CustomSegmentEditorUI(RadWheel):
             )
 
     def build_up_menu(self):
-        with VCard(variant="flat", height="50%"):
+        with VCard(variant="flat", height="50%", width="310px"):
             with VCardText(style="height: calc(100% - 64px); overflow-y: auto;"):
                 self._segment_list = SegmentList(
                     typed_state=self._segment_editor_ui.sub_state(

@@ -13,5 +13,17 @@ be used as a documentation.
 pip install "trame-slicer[standalone]"
 ```
 
-Shows a nice use case of the radial wheel, being added to trame-slicer's medical
-viewer example.
+An example to show a nice use case of radial menus when being added to
+[trame-slicer](https://github.com/KitwareMedical/trame-slicer)'s medical viewer
+example.
+
+The tool RadMenu shows the Markups and segmentation tools as well as their
+options with the side menus.
+
+![](slicer_example_1.png)
+
+A second RadMenu is used as a context menu that shows when right clicking on the
+fiducial nodes of the views. It only consists of a RadMenu with no RadWheel, it
+only has a right side menu.
+
+![](slicer_example_2.png)

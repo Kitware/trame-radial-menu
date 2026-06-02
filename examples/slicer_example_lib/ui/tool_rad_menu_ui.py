@@ -16,7 +16,6 @@ class ToolRadMenuState(RadMenuState):
 
 
 class ToolRadMenuUI(RadMenuUI):
-    # The objects must know the medical_view_ui to use its active_tool mechanism
     def __init__(self, segment_editor_ui: SegmentEditorUI, server: Server):
         super().__init__(
             server,
