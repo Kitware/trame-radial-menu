@@ -16,8 +16,14 @@ class RadMenuState:
 
 
 class RadMenuUI(RadMenu):
-    def __init__(self, server: Server, ref: str = "", **kwargs):
-        self._typed_state = TypedState(server.state, RadMenuState, namespace=ref)
+    def __init__(
+        self,
+        server: Server,
+        state_type: type[RadMenuState] = RadMenuState,
+        ref: str = "",
+        **kwargs,
+    ):
+        self._typed_state = TypedState(server.state, state_type, namespace=ref)
         self._ref = ref
 
         super().__init__(

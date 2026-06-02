@@ -8,7 +8,10 @@ from .rad_menu_ui import RadMenuUI
 class MarkupOptionsRadMenuUI(RadMenuUI):
     def __init__(self, server: Server):
         super().__init__(
-            server, "markupOptionsRadMenu", open_at_right_click_pos=False, color="#777d"
+            server,
+            ref="markupOptionsRadMenu",
+            open_at_right_click_pos=False,
+            color="#777d",
         )
         with self._typed_state.state:
             self.data.right_menu_open = True

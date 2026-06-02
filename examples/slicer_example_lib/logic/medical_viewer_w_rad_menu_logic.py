@@ -22,6 +22,7 @@ class MedicalViewerWRadMenuLogic(MedicalViewerLogic):
         )
 
     def set_ui(self, ui: MedicalViewerWRadMenuUI):
+        super().set_ui(ui)
         self._radial_markups_button_logic.set_ui(ui.tool_rad_menu.markups_wheel)
         self._markups_context_menu_logic.set_ui(
             ui.markup_options_rad_menu._markups_context_menu

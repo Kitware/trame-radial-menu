@@ -2,17 +2,16 @@ from dataclasses import dataclass
 
 from trame.widgets.html import Div, Template
 from trame_server import Server
-from trame_server.utils.typed_state import TypedState
 from trame_slicer.app.ui import SegmentEditorUI
 
 from .rad_menu_placeholder_button import RadMenuPlaceholderButton
-from .rad_menu_ui import RadMenuUI
+from .rad_menu_ui import RadMenuState, RadMenuUI
 from .radial_markups_buttons_ui import RadialMarkupsButtonsUI
 from .segmentation.custom_segment_editor_ui import CustomSegmentEditorUI
 
 
 @dataclass
-class ToolRadMenuState:
+class ToolRadMenuState(RadMenuState):
     segment_mode: bool = False
 
 
@@ -20,9 +19,12 @@ class ToolRadMenuUI(RadMenuUI):
     # The objects must know the medical_view_ui to use its active_tool mechanism
     def __init__(self, segment_editor_ui: SegmentEditorUI, server: Server):
         super().__init__(
-            server, "toolRadMenu", open_at_right_click_pos=False, color="#777d"
+            server,
+            ToolRadMenuState,
+            ref="toolRadMenu",
+            open_at_right_click_pos=False,
+            color="#777d",
         )
-        self._mode_typed_state = TypedState(self.state, ToolRadMenuState)
 
         with self:
             self._markups_wheel = RadialMarkupsButtonsUI(
@@ -118,13 +120,11 @@ class ToolRadMenuUI(RadMenuUI):
 
     @property
     def opened_segmentation_wheel(self):
-        return self._mode_typed_state.name.segment_mode
+        return self._typed_state.name.segment_mode
 
     def _toggle_segment_menu_selected(self):
-        self._mode_typed_state.data.segment_mode = not (
-            self._mode_typed_state.data.segment_mode
-        )
-        if not (self._mode_typed_state.data.segment_mode):
+        self._typed_state.data.segment_mode = not (self._typed_state.data.segment_mode)
+        if not (self._typed_state.data.segment_mode):
             self.data.right_menu_open = False
             self.data.up_menu_open = False
             self.data.down_menu_open = False
