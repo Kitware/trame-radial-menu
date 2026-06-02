@@ -70,29 +70,28 @@ class CustomSegmentEditorUI(RadWheel):
                 SegmentationEffectDraw,
                 **kwargs,
             )
-            if all:
-                self._create_radial_effect_button(
-                    "Logical Operators",
-                    "mdi-vector-intersection",
-                    SegmentationEffectLogicalOperators,
-                )
-                self._create_radial_effect_button(
-                    "Threshold",
-                    "mdi-auto-fix",
-                    SegmentationEffectThreshold,
-                )
-                self._create_radial_effect_button(
-                    "Islands",
-                    "mdi-scatter-plot",
-                    SegmentationEffectIslands,
-                    **kwargs,
-                )
-                self._create_radial_effect_button(
-                    "Smoothing",
-                    "mdi-square-rounded-outline",
-                    SegmentationEffectSmoothing,
-                    **kwargs,
-                )
+            self._create_radial_effect_button(
+                "Logical Operators",
+                "mdi-vector-intersection",
+                SegmentationEffectLogicalOperators,
+            )
+            self._create_radial_effect_button(
+                "Threshold",
+                "mdi-auto-fix",
+                SegmentationEffectThreshold,
+            )
+            self._create_radial_effect_button(
+                "Islands",
+                "mdi-scatter-plot",
+                SegmentationEffectIslands,
+                **kwargs,
+            )
+            self._create_radial_effect_button(
+                "Smoothing",
+                "mdi-square-rounded-outline",
+                SegmentationEffectSmoothing,
+                **kwargs,
+            )
 
     def build_right_menu(self):
         with VCard(width=310, classes="pa-4"):
