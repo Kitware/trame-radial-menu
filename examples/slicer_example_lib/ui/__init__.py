@@ -4,7 +4,7 @@ from .markups_options import (
     MarkupsContextMenuState,
     MarkupsContextMenuUI,
 )
-from .medical_viewer_w_rad_menu_ui_extension import MedicalViewerWRadMenuUIExtension
+from .medical_viewer_w_rad_menu_ui import MedicalViewerWRadMenuUI
 from .rad_item_button import RadItemButton
 from .rad_menu_placeholder_button import RadMenuPlaceholderButton
 from .rad_menu_ui import RadMenuState, RadMenuUI
@@ -19,7 +19,7 @@ __all__ = [
     "MarkupOptionsRadMenuUI",
     "MarkupsContextMenuState",
     "MarkupsContextMenuUI",
-    "MedicalViewerWRadMenuUIExtension",
+    "MedicalViewerWRadMenuUI",
     "RadItemButton",
     "RadMenuPlaceholderButton",
     "RadMenuState",

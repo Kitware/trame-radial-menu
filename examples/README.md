@@ -10,7 +10,7 @@ be used as a documentation.
 # Slicer example
 
 ```
-pip install trame-slicer[standalone]
+pip install "trame-slicer[standalone]"
 ```
 
 Shows a nice use case of the radial wheel, being added to trame-slicer's medical

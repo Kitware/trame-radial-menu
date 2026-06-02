@@ -1,8 +1,17 @@
-import type { Point, EightSymmetryPoints, Interval, Box } from './types'
+import type {
+  Point,
+  EightSymmetryPoints,
+  Interval,
+  Box,
+  TopLeftAnchor,
+  BottomLeftAnchor,
+  TopRightAnchor,
+  BoxSize
+} from './types'
 
 export function polar(cx: number, cy: number, r: number, angle: number): Point {
   const rad: number = ((angle - 90) * Math.PI) / 180 // angle 0 is up
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad)}
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
 }
 
 export function donutSlicePath(
@@ -91,36 +100,30 @@ export function getEightSymmetryPoints(a: number, b: number, w: number): EightSy
 }
 
 // Style to anchor a DOM element's top left corner to a point
-export function pointToStyle(point: Point): { left: string; top: string } {
-  const x = point.x
-  const y = point.y
+export function pointToStyle(point: Point): TopLeftAnchor {
   return {
-    left: `${x}px`,
-    top: `${y}px`,
+    left: `${point.x}px`,
+    top: `${point.y}px`,
   }
 }
 
 // style to anchor a dom element's bottom right corner to a point
-export function pointToStyleBottomLeft(point: Point): { left: string; bottom: string } {
-  const x = point.x
-  const y = point.y
+export function pointToStyleBottomLeft(point: Point): BottomLeftAnchor {
   return {
-    left: `${x}px`,
-    bottom: `${y}px`,
+    left: `${point.x}px`,
+    bottom: `${point.y}px`,
   }
 }
 
 // style to anchor a dom element's bottom right corner to a point
-export function pointToStyleTopRight(point: Point): { right: string; top: string } {
-  const x = point.x
-  const y = point.y
+export function pointToStyleTopRight(point: Point): TopRightAnchor {
   return {
-    right: `${x}px`,
-    top: `${y}px`,
+    right: `${point.x}px`,
+    top: `${point.y}px`,
   }
 }
 
-export function boxToStyle(box: Box): { width: string; height: string } {
+export function boxToStyle(box: Box): BoxSize {
   const [w, h] = box
   return {
     width: `${w}px`,
