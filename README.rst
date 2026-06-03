@@ -6,6 +6,10 @@ A trame component that make a radial menu around the mouse cursor
 .. image:: ./picture.png
    :alt: Screenshot of trame-radial-menu
 
+License
+----------------------------------------
+
+This library is OpenSource and follow the Apache Software License
 
 Installation
 ----------------------------------------
