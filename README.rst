@@ -3,7 +3,7 @@ Trame Radial Menu
 
 A trame component that make a radial menu around the mouse cursor
 
-.. image:: ./picture.png
+.. image:: https://raw.githubusercontent.com/Kitware/trame-radial-menu/master/picture.png
    :alt: Screenshot of trame-radial-menu
 
 License

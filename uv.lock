@@ -825,7 +825,7 @@ wheels = [
 
 [[package]]
 name = "trame-radial-menu"
-version = "1.0.2"
+version = "1.0.3"
 source = { editable = "." }
 dependencies = [
     { name = "trame-client" },

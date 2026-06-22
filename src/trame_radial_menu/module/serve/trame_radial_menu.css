@@ -1,20 +1,20 @@
-.centerAbs[data-v-75db5b95] {
+.centerAbs[data-v-f0ff7ab8] {
   position: absolute;
   transform: translate(-50%, -50%);
   pointer-events: auto;
 }
-.fullSize[data-v-75db5b95] {
+.fullSize[data-v-f0ff7ab8] {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
-.sideDiv[data-v-75db5b95] {
+.sideDiv[data-v-f0ff7ab8] {
   position: absolute;
 }
-.dragZone[data-v-75db5b95] {
+.dragZone[data-v-f0ff7ab8] {
   cursor: grab;
 }
-.dragZone[data-v-75db5b95]:active {
+.dragZone[data-v-f0ff7ab8]:active {
   cursor: grabbing;
 }
 svg[data-v-7fa71486] {

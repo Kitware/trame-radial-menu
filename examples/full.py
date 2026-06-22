@@ -163,6 +163,10 @@ class ExampleRadialMenu(TrameApp):
                         v_model=("close_menu_button", False),
                         label="Replace central close menu button",
                     )
+                    v3.VSwitch(
+                        v_model=("rad_menu_open_at_right_click", True),
+                        label="Open menu using right click",
+                    )
                     SliderWithDefaultValue(
                         label="central button radius",
                         state_var_name="close_menu_button_radius",
@@ -188,7 +192,7 @@ class ExampleRadialMenu(TrameApp):
                                 "top-left",
                             ],
                         ),
-                        v_model=("drag_position", "top-left"),
+                        v_model=("drag_button_position", "top-left"),
                     )
                     v3.VSwitch(
                         v_model=("show_rad_menu_right_menu", False),
@@ -257,7 +261,7 @@ class ExampleRadialMenu(TrameApp):
                             min=0,
                             max=360,
                         )
-                        v3.VColorPicker(v_model=("outer_color", "#777777bb"))
+                        v3.VColorPicker(v_model=("outer_color", "#777b"))
                         v3.VSlider(
                             thumb_label="always",
                             v_model=("outer_begin_angle", 0),
@@ -285,9 +289,10 @@ class ExampleRadialMenu(TrameApp):
                     v_model_leftmenuopen=("show_rad_menu_left_menu",),
                     v_model_upmenuopen=("show_rad_menu_up_menu",),
                     v_model_downmenuopen=("show_rad_menu_down_menu",),
+                    open_at_right_click_pos=("rad_menu_open_at_right_click",),
                     close_menu_button_radius=("close_menu_button_radius",),
                     color=("menu_color",),
-                    drag_position=("drag_position",),
+                    drag_button_position=("drag_button_position",),
                 )
 
 
