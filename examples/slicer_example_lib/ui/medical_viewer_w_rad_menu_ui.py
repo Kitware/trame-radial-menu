@@ -28,9 +28,9 @@ class MedicalViewerWRadMenuUI(MedicalViewerUI):
             )
 
     @property
-    def tool_rad_menu(self):
+    def tool_rad_menu(self) -> ToolRadMenuUI:
         return self._tool_rad_menu
 
     @property
-    def markup_options_rad_menu(self):
+    def markup_options_rad_menu(self) -> MarkupOptionsRadMenuUI:
         return self._markup_options_rad_menu

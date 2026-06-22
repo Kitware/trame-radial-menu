@@ -21,7 +21,7 @@ class MedicalViewerWRadMenuLogic(MedicalViewerLogic):
             lambda *_: server.controller.tool_rad_menu_open_at_cursor(),
         )
 
-    def set_ui(self, ui: MedicalViewerWRadMenuUI):
+    def set_ui(self, ui: MedicalViewerWRadMenuUI) -> None:
         super().set_ui(ui)
         self._radial_markups_button_logic.set_ui(ui.tool_rad_menu.markups_wheel)
         self._markups_context_menu_logic.set_ui(

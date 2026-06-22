@@ -27,5 +27,5 @@ class MarkupOptionsRadMenuUI(RadMenuUI):
                 Div()
 
     @property
-    def markups_context_menu(self):
+    def markups_context_menu(self) -> MarkupsContextMenuUI:
         return self._markups_context_menu

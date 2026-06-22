@@ -124,7 +124,7 @@ class ToolRadMenuUI(RadMenuUI):
                     variant="flat",
                 )
 
-    def _switch_active_menu(self):
+    def _switch_active_menu(self) -> None:
         if self.data.active_menu == MenuType.MARKUPS:
             self.data.active_menu = MenuType.SEGMENTATION
         elif self.data.active_menu == MenuType.SEGMENTATION:
@@ -133,19 +133,19 @@ class ToolRadMenuUI(RadMenuUI):
             self.data.up_menu_open = False
             self.data.down_menu_open = False
 
-    def _toggle_right_menu_opened(self):
+    def _toggle_right_menu_opened(self) -> None:
         self.data.right_menu_open = not (self.data.right_menu_open)
 
-    def _toggle_up_menu_opened(self):
+    def _toggle_up_menu_opened(self) -> None:
         self.data.up_menu_open = not (self.data.up_menu_open)
 
-    def _toggle_down_menu_opened(self):
+    def _toggle_down_menu_opened(self) -> None:
         self.data.down_menu_open = not (self.data.down_menu_open)
 
     @property
-    def markups_wheel(self):
+    def markups_wheel(self) -> RadialMarkupsButtonsUI:
         return self._markups_wheel
 
     @property
-    def segmentation_wheel(self):
+    def segmentation_wheel(self) -> CustomSegmentEditorUI:
         return self._segmentation_wheel

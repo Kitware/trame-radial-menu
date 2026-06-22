@@ -23,7 +23,7 @@ html.Template.slot_names.update(new_slot_names)
 
 
 class HtmlElement(AbstractElement):
-    def __init__(self, _elem_name, children=None, **kwargs):
+    def __init__(self, _elem_name: str, children=None, **kwargs: dict):
         super().__init__(_elem_name, children, **kwargs)
         if self.server:
             self.server.enable_module(module)
@@ -37,7 +37,7 @@ __all__ = [
 
 
 class RadMenu(HtmlElement):
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: dict):
         super().__init__(
             "rad-menu",
             **kwargs,
@@ -51,7 +51,7 @@ class RadMenu(HtmlElement):
 
 
 class RadWheel(HtmlElement):
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: dict):
         super().__init__(
             "rad-wheel",
             **kwargs,
@@ -66,7 +66,7 @@ class RadWheel(HtmlElement):
 
 
 class RadItem(HtmlElement):
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: dict):
         super().__init__(
             "rad-item",
             **kwargs,

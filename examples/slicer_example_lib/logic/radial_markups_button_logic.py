@@ -11,7 +11,7 @@ class RadialMarkupsButtonLogic(BaseLogic):
         super().__init__(server, slicer_app, None)
         self._markup_nodes = []
 
-    def set_ui(self, ui: RadialMarkupsButtonsUI):
+    def set_ui(self, ui: RadialMarkupsButtonsUI) -> None:
         ui.place_node_type.connect(self._on_place_node_type)
         ui.clear_clicked.connect(self._on_clear_clicked)
 

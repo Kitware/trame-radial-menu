@@ -89,6 +89,7 @@ isort.required-imports = []
 "tests/**" = ["T20"]
 "noxfile.py" = ["T20"]
 "src/**" = ["SIM117"]
+
 [tool.semantic_release]
 version_toml = [
     "pyproject.toml:project.version",
@@ -96,7 +97,6 @@ version_toml = [
 version_variables = [
     "src/trame_radial_menu/__init__.py:__version__",
 ]
-
 build_command = """
     pip install build
     python -m build

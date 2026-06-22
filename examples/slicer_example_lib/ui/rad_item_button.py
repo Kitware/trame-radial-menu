@@ -12,7 +12,7 @@ class RadItemButton(RadItem):
         name: str,
         icon: str | tuple,
         click: Callable | str | None = None,
-        **kwargs,
+        **kwargs: dict,
     ) -> None:
         super().__init__(**kwargs)
 

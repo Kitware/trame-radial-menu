@@ -9,7 +9,7 @@ class RadialMarkupsButtonsUI(RadWheel):
     place_node_type = Signal(str, bool)
     clear_clicked = Signal()
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: dict):
         super().__init__(color="#aaad", innerRadius=(40,), outerRadius=(120,), **kwargs)
         self._markup_nodes = []
 
@@ -63,7 +63,7 @@ class RadialMarkupsButtonsUI(RadWheel):
                 is_persistent=False,
             )
 
-            def clear_click():
+            def clear_click() -> None:
                 self.ctrl.tool_rad_menu_close()
                 self.clear_clicked()
 
@@ -76,7 +76,7 @@ class RadialMarkupsButtonsUI(RadWheel):
     def _create_markups_buttons_on_radial_wheel(
         self, name: str, icon: str, node_type: str, is_persistent: bool
     ) -> None:
-        def on_click():
+        def on_click() -> None:
             self.ctrl.tool_rad_menu_close()
             self.place_node_type(node_type, is_persistent)
 

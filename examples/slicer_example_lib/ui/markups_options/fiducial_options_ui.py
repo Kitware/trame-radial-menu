@@ -3,12 +3,15 @@ from trame.widgets.vuetify3 import VList, VListItem, VListItemTitle
 from undo_stack import Signal
 
 
-def sequence(f1, f2):
-    def sequenced_function():
-        f1()
-        f2()
+class ListItemWTitle(VListItem):
+    def __init__(self, title: str, action: callable):
+        def click() -> None:
+            self.ctrl.markup_options_rad_menu_close()
+            action()
 
-    return sequenced_function
+        super().__init__(click=click)
+        with self:
+            VListItemTitle(title)
 
 
 class FiducialMarkupOptionsUI(VList):
@@ -16,24 +19,9 @@ class FiducialMarkupOptionsUI(VList):
     select_control_point = Signal(vtkMRMLMarkupsFiducialNode)
     unselect_control_point = Signal(vtkMRMLMarkupsFiducialNode)
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: dict):
         super().__init__(**kwargs)
         with self:
-            with VListItem(
-                click=sequence(
-                    self.ctrl.markup_options_rad_menu_close, self.delete_control_point
-                )
-            ):
-                VListItemTitle("Delete control point")
-            with VListItem(
-                click=sequence(
-                    self.ctrl.markup_options_rad_menu_close, self.select_control_point
-                )
-            ):
-                VListItemTitle("Select control point")
-            with VListItem(
-                click=sequence(
-                    self.ctrl.markup_options_rad_menu_close, self.unselect_control_point
-                )
-            ):
-                VListItemTitle("Unselect control point")
+            ListItemWTitle("Delete control point", self.delete_control_point)
+            ListItemWTitle("Select control point", self.select_control_point)
+            ListItemWTitle("Unselect control point", self.unselect_control_point)

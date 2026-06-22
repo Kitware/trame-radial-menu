@@ -21,7 +21,7 @@ class RadMenuUI(RadMenu):
         server: Server,
         state_type: type[RadMenuState] = RadMenuState,
         ref: str = "",
-        **kwargs,
+        **kwargs: dict,
     ):
         self._typed_state = TypedState(server.state, state_type, namespace=ref)
         self._ref = ref
@@ -37,15 +37,15 @@ class RadMenuUI(RadMenu):
         )
 
     @property
-    def name(self):
+    def name(self) -> RadMenuState:
         return self._typed_state.name
 
     @property
-    def data(self):
+    def data(self) -> RadMenuState:
         return self._typed_state.data
 
-    def close(self):
+    def close(self) -> None:
         self.data.is_open = False
 
-    def open_at_cursor(self):
+    def open_at_cursor(self) -> None:
         self.server.js_call(ref=self._ref, method="openAtCursor")

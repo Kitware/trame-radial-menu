@@ -3,7 +3,7 @@ from trame.widgets.vuetify3 import VBtn, VTooltip
 
 
 class RadMenuPlaceholderButton(Div):
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: dict):
         if "location" not in kwargs and "text" in kwargs:
             kwargs["location"] = "end"
         if "color" not in kwargs:
