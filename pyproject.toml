@@ -1,6 +1,6 @@
 [project]
 name = "trame-radial-menu"
-version = "1.0.0"
+version = "v1.0.0"
 description = "A trame component that make a radial menu around the mouse cursor"
 authors = [
     { name = "Kitware Europe", email = "kitware@kitware.fr" },
